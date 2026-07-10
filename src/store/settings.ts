@@ -1,13 +1,19 @@
+import { toast } from "sonner"
 import { create } from "zustand"
 import { immer } from "zustand/middleware/immer"
-import { type UserConfig, DEFAULT_USER_CONFIG, type GistConfig, type WebDAVUserConfig } from "~src/types"
-import { getUserConfig, setUserConfig, getMaxPriority } from "./config"
+
 import { messages } from "~/src/i18n"
-import { toast } from "sonner"
+import {
+  DEFAULT_USER_CONFIG,
+  type UserConfig,
+  type WebDAVUserConfig
+} from "~src/types"
+
+import { getMaxPriority, getUserConfig, setUserConfig } from "./storage"
 
 /**
  * Settings store using Zustand + Immer
- * 
+ *
  * Manages user configuration in memory. Persistence only happens when
  * explicitly calling persistConfig() (typically on save button click)
  */
@@ -31,15 +37,15 @@ interface SettingsState {
   // --- Action Layer ---
   /**
    * Load configuration from storage into memory
-   * 
+   *
    * Only true when `loadConfig` and `persistConfig` are in progress
    */
   loadConfig: () => Promise<void>
   /**
    * Update configuration in memory using Immer draft (does not persist to storage)
-   * 
+   *
    * @param updater - updater function that receives a draft of UserConfig
-   * 
+   *
    * @example
    * ```ts
    * updateConfig(draft => {
@@ -50,23 +56,10 @@ interface SettingsState {
    */
   updateConfig: (updater: (draft: UserConfig) => void) => void
   /**
-   * Update Gist configuration in memory using Immer draft (does not persist to storage)
-   * 
-   * @param updater - updater function that receives a draft of GistConfig
-   * 
-   * @example
-   * ```ts
-   * updateGistConfig(draft => {
-   *  draft.enabled = true
-   * })
-   * ```
-   */
-  updateGistConfig: (updater: (draft: GistConfig) => void) => void
-  /**
    * Update WebDAV configuration in memory using Immer draft (does not persist to storage)
-   * 
+   *
    * @param updater - updater function that receives a draft of WebDAVUserConfig[]
-   * 
+   *
    * @example
    * ```ts
    * updateWebDavConfigs(draft => {
@@ -75,7 +68,7 @@ interface SettingsState {
    * ```
    */
   updateWebDavConfigs: (updater: (draft: WebDAVUserConfig[]) => void) => void
-  /** 
+  /**
    * Persist current state to storage
    * Call this when user clicks save button
    */
@@ -98,17 +91,23 @@ export const useSettingsStore = create<SettingsState>()(
      * Load user configuration from storage into memory
      */
     loadConfig: async () => {
-      set((state) => { state.initializing = true })
+      set((state) => {
+        state.initializing = true
+      })
       const config = await getUserConfig()
-      set((state) => { state.config = config })
-      set((state) => { state.initializing = false })
+      set((state) => {
+        state.config = config
+      })
+      set((state) => {
+        state.initializing = false
+      })
     },
 
     /**
      * Update configuration in memory using Immer draft (does not persist to storage)
-     * 
+     *
      * @param updater - updater function that receives a draft of UserConfig
-     * 
+     *
      * @example
      * ```ts
      * updateConfig(draft => {
@@ -124,28 +123,10 @@ export const useSettingsStore = create<SettingsState>()(
     },
 
     /**
-     * Update Gist configuration in memory using Immer draft (does not persist to storage)
-     * 
-     * @param updater - updater function that receives a draft of GistConfig
-     * 
-     * @example
-     * ```ts
-     * updateGistConfig(draft => {
-     *  draft.enabled = true
-     * })
-     * ```
-     */
-    updateGistConfig: (updater: (draft: GistConfig) => void) => {
-      set((state) => {
-        updater(state.config.gist!)
-      })
-    },
-
-    /**
      * Update WebDAV configuration in memory using Immer draft (does not persist to storage)
-     * 
+     *
      * @param updater - updater function that receives a draft of WebDAVUserConfig
-     * 
+     *
      * @example
      * ```ts
      * updateWebDavConfigs(draft => {
@@ -164,10 +145,14 @@ export const useSettingsStore = create<SettingsState>()(
      * Call this when user clicks save button
      */
     persistConfig: async (force: boolean = false) => {
-      set((state) => { state.saving = true })
+      set((state) => {
+        state.saving = true
+      })
       const { config } = get()
       await setUserConfig(config)
-      set((state) => { state.saving = false })
+      set((state) => {
+        state.saving = false
+      })
 
       if (!force) toast(messages.alert.settingsSaved())
     },
@@ -176,7 +161,7 @@ export const useSettingsStore = create<SettingsState>()(
      * Get the next available priority value
      */
     getNextPriority: async () => {
-      return await getMaxPriority() + 1
-    },
+      return (await getMaxPriority()) + 1
+    }
   }))
 )

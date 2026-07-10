@@ -15,7 +15,9 @@
     "package:edge": "plasmo package --target=edge-mv3",
     "package:firefox": "plasmo package --target=firefox-mv2",
     "postinstall": "node scripts/patch.js",
-    "lint": "eslint \"src/**/*.{ts,tsx}\""
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@plasmohq/storage": "^1.15.0",

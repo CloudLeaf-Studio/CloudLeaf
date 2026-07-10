@@ -1,115 +1,118 @@
 /**
  * Local file provider module
- * 
+ *
  * @packageDocumentation
  */
 
-import { type SyncPayload, type Result } from "~/src/types"
-import { BaseProvider } from "~/src/providers"
-import { DEFAULT_FILENAME } from "~src/constants"
 import { messages } from "~/src/i18n"
+import { BaseProvider } from "~/src/providers"
+import { type Result, type SyncPayload } from "~/src/types"
+import { DEFAULT_FILENAME } from "~src/constants"
 
 /**
  * Local file provider
- * 
+ *
  * @remarks Orchestrates native browser save/open dialogs for JSON sync payloads.
  */
 export class LocalProvider extends BaseProvider {
-    /**
-     * Unique provider identifier
-     */
-    readonly id = "local_file"
-    /**
-     * Display name
-     */
-    readonly name = "Local File"
+  /**
+   * Unique provider identifier
+   */
+  readonly id = "local_file"
+  /**
+   * Display name
+   */
+  readonly name = "Local File"
 
-    /**
-     * Validate local provider (always valid)
-     * 
-     * @returns Always true since local storage is always available
-     */
-    async isValid(): Promise<Result<boolean>> {
-        return { ok: true, data: true }
+  /**
+   * Validate local provider (always valid)
+   *
+   * @returns Always true since local storage is always available
+   */
+  async isValid(): Promise<Result<boolean>> {
+    return { ok: true, data: true }
+  }
+
+  /**
+   * Trigger Browser Download to save data as a local file
+   *
+   * browser -\> local file
+   *
+   * @param data - Bookmark payload
+   *
+   * @returns Ok or error result
+   */
+  async upload(data: SyncPayload): Promise<Result<void>> {
+    try {
+      const json = JSON.stringify(data)
+      const blob = new Blob([json], { type: "application/json" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = DEFAULT_FILENAME
+
+      // Trigger download
+      document.body.appendChild(a)
+      a.click()
+
+      // Clean up
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+
+      return { ok: true }
+    } catch (error) {
+      return {
+        ok: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : messages.error.downloadFailed()
+      }
     }
+  }
 
-    /**
-     * Trigger Browser Download to save data as a local file
-     * 
-     * browser -\> local file
-     * 
-     * @param data - Bookmark payload
-     * 
-     * @returns Ok or error result
-     */
-    async upload(data: SyncPayload): Promise<Result<void>> {
-        try {
-            const json = JSON.stringify(data)
-            const blob = new Blob([json], { type: "application/json" })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement("a")
-            a.href = url
-            a.download = DEFAULT_FILENAME
+  /**
+   * Trigger File Picker to get data from a local file
+   *
+   * local file -\> browser
+   *
+   * @returns Bookmark payload from local file
+   */
+  async download(): Promise<Result<SyncPayload>> {
+    return new Promise((resolve) => {
+      // Create file input element
+      const input = document.createElement("input")
+      input.type = "file"
+      input.accept = "application/json"
 
-            // Trigger download
-            document.body.appendChild(a)
-            a.click()
-
-            // Clean up
-            document.body.removeChild(a)
-            URL.revokeObjectURL(url)
-
-            return { ok: true }
-        } catch (error) {
-            return {
-                ok: false,
-                error: error instanceof Error ? error.message : messages.error.downloadFailed()
-            }
+      // Handle file selection
+      input.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0]
+        if (!file) {
+          resolve({ ok: false, error: messages.error.noFileSelected() })
+          return
         }
-    }
 
-    /**
-     * Trigger File Picker to get data from a local file
-     * 
-     * local file -\> browser
-     * 
-     * @returns Bookmark payload from local file
-     */
-    async download(): Promise<Result<SyncPayload>> {
-        return new Promise((resolve) => {
-            // Create file input element
-            const input = document.createElement("input")
-            input.type = "file"
-            input.accept = "application/json"
+        try {
+          const text = await file.text()
+          const data = JSON.parse(text) as SyncPayload
+          if (!data.bookmarks || !Array.isArray(data.bookmarks)) {
+            resolve({ ok: false, error: messages.error.invalidData() })
+            return
+          }
+          resolve({ ok: true, data })
+        } catch {
+          resolve({ ok: false, error: messages.error.parseFailed() })
+        }
+      }
 
-            // Handle file selection
-            input.onchange = async (e) => {
-                const file = (e.target as HTMLInputElement).files?.[0]
-                if (!file) {
-                    resolve({ ok: false, error: messages.error.noFileSelected() })
-                    return
-                }
+      // Handle cancelation
+      input.oncancel = () => {
+        resolve({ ok: false, error: messages.error.canceled() })
+      }
 
-                try {
-                    const text = await file.text()
-                    const data = JSON.parse(text) as SyncPayload
-                    if (!data.bookmarks || !Array.isArray(data.bookmarks)) {
-                        resolve({ ok: false, error: messages.error.invalidData() })
-                        return
-                    }
-                    resolve({ ok: true, data })
-                } catch {
-                    resolve({ ok: false, error: messages.error.parseFailed() })
-                }
-            }
-
-            // Handle cancelation
-            input.oncancel = () => {
-                resolve({ ok: false, error: messages.error.canceled() })
-            }
-
-            // click -> file -> onchange or oncancel
-            input.click()
-        })
-    }
+      // click -> file -> onchange or oncancel
+      input.click()
+    })
+  }
 }

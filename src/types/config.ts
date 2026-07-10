@@ -1,6 +1,6 @@
 /**
  * User configuration for persistence
- * 
+ *
  * @remarks Stored in browser extension storage
  */
 export interface UserConfig {
@@ -46,7 +46,7 @@ export interface GistConfig {
 
 /**
  * WebDAV user account configuration
- * 
+ *
  * @remarks Only stores user credentials and vendor reference
  */
 export interface WebDAVUserConfig {
@@ -82,7 +82,7 @@ export interface WebDAVUserConfig {
 
 /**
  * Custom cloud vendor metadata
- * 
+ *
  * @remarks Loaded into WebDAVRegistry at startup, contains no user credentials
  */
 export interface CustomVendorConfig {
@@ -102,11 +102,11 @@ export interface CustomVendorConfig {
 
 /**
  * Default user configuration
- * 
+ *
  * @readonly
  */
 export const DEFAULT_USER_CONFIG: UserConfig = {
   gist: undefined,
   webDavConfigs: [],
-  customVendors: [],
+  customVendors: []
 }

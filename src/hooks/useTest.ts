@@ -1,12 +1,13 @@
 import { useState } from "react"
+import { toast } from "sonner"
+
+import { messages } from "~/src/i18n"
 import { GistProvider, WebDAVRegistry } from "~src/providers"
 import { type UserConfig } from "~src/types"
-import { messages } from "~/src/i18n"
-import { toast } from "sonner"
 
 /**
  * Hook for testing connectivity to configured sync providers.
- * 
+ *
  * @returns
  * - `testingMap`: record of testing states per provider id
  * - `testGist(config)`: validate Gist provider settings
@@ -18,19 +19,19 @@ export const useTest = () => {
 
   /**
    * Set testing state for a single provider id.
-   * 
+   *
    * @param id - Provider identifier (e.g. 'gist' or 'webdav-0')
    * @param isTesting - Whether the provider is currently being tested
    */
   const setItemTesting = (id: string, isTesting: boolean) => {
-    setTestingMap(prev => ({ ...prev, [id]: isTesting }))
+    setTestingMap((prev) => ({ ...prev, [id]: isTesting }))
   }
 
   /**
    * Test Gist provider configuration by attempting to validate credentials.
-   * 
+   *
    * Shows an alert with the result and updates `testingMap` during the check.
-   * 
+   *
    * @param config - User configuration containing `gist` settings
    */
   const testGist = async (config: UserConfig) => {
@@ -44,7 +45,11 @@ export const useTest = () => {
         config.gist.fileName
       )
       const res = await provider.isValid()
-      toast(res.ok && res.data ? messages.alert.gistOk() : messages.alert.gistFailed(res.error || ""))
+      toast(
+        res.ok && res.data
+          ? messages.alert.gistOk()
+          : messages.alert.gistFailed(res.error || "")
+      )
     } catch (e) {
       toast(messages.alert.exception(String(e)))
     } finally {
@@ -54,9 +59,9 @@ export const useTest = () => {
 
   /**
    * Test a WebDAV account configuration by index in `config.webDavConfigs`.
-   * 
+   *
    * Shows an alert with the result and updates `testingMap` during the check.
-   * 
+   *
    * @param config - User configuration containing `webDavConfigs`
    * @param index - Index of the WebDAV account to test
    */
@@ -68,7 +73,11 @@ export const useTest = () => {
     try {
       const provider = WebDAVRegistry.createProvider(acc.vendorId, acc)
       const res = await provider.isValid()
-      toast(res.ok && res.data ? messages.alert.webdavOk(acc.username) : messages.alert.webdavFailed(res.error || ""))
+      toast(
+        res.ok && res.data
+          ? messages.alert.webdavOk(acc.username)
+          : messages.alert.webdavFailed(res.error || "")
+      )
     } catch (e) {
       toast(messages.alert.exception(String(e)))
     } finally {

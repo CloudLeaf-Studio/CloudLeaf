@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react"
-import { useSettingsStore } from "~src/store"
-import { GistSettings, Sources, WebDavSettings, WebDavVendorManager } from "~src/components"
-import { type Editor } from "~src/types"
-import { messages } from "~/src/i18n"
-import "./index.css"
 import { Toaster } from "sonner"
+
+import { messages } from "~/src/i18n"
+import {
+  GistSettings,
+  Sources,
+  WebDavSettings,
+  WebDavVendorManager
+} from "~src/components"
+import { useSettingsStore } from "~src/store"
+import { type Editor } from "~src/types"
+
+import "./index.css"
 
 /**
  * Options page component for CloudLeaf extension.
  *
  * Provides the main settings interface where users can manage sync sources,
  * configure Gist and WebDAV accounts, and customize cloud vendor settings.
- * 
+ *
  * Uses Zustand store for centralized state management.
- * 
+ *
  * @returns A JSX element rendering the full options page
  */
 function OptionsPage() {
@@ -36,28 +43,27 @@ function OptionsPage() {
   }, [])
 
   // Loading state UI
-  if (initializing) return <div className="p-20 text-slate-400">{messages.ui.loading()}</div>
+  if (initializing)
+    return <div className="p-20 text-slate-400">{messages.ui.loading()}</div>
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-2xl mx-auto space-y-8">
         {/* Page header */}
         <header>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{messages.ui.settingsTitle()}</h1>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            {messages.ui.settingsTitle()}
+          </h1>
         </header>
 
         {/* Main content sections */}
         <main className="space-y-6">
           {/* Sync sources management */}
-          <Sources
-            onOpenEditor={(opts) => setEditor(opts)}
-          />
+          <Sources onOpenEditor={(opts) => setEditor(opts)} />
 
           {/* Inline editor panel: Gist or WebDAV */}
           {editor?.type === "gist" && (
-            <GistSettings
-              onClose={() => setEditor(null)}
-            />
+            <GistSettings onClose={() => setEditor(null)} />
           )}
 
           {/* WebDAV account editor/add section (conditional) */}

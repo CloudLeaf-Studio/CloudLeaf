@@ -1,6 +1,6 @@
 /**
  * Type definitions module
- * 
+ *
  * @packageDocumentation
  */
 

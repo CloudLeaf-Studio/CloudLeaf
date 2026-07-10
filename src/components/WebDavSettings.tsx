@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
-import { WebDAVRegistry } from "~src/providers"
-import Input from "./Input"
-import Button from "./Button"
-import Select from "./Select"
-import type { WebDAVUserConfig } from "~src/types"
-import { DEFAULT_WEBDAV_FILEPATH } from "~src/constants"
-import { loadCustomVendorsFromConfig, useSettingsStore } from "~src/store"
-import { messages } from "~/src/i18n"
 import { toast } from "sonner"
+
+import { messages } from "~/src/i18n"
+import { DEFAULT_WEBDAV_FILEPATH } from "~src/constants"
+import { WebDAVRegistry } from "~src/providers"
+import { loadCustomVendorsFromConfig, useSettingsStore } from "~src/store"
+import type { WebDAVUserConfig } from "~src/types"
+
+import Button from "./Button"
+import Input from "./Input"
+import Select from "./Select"
 
 /**
  * Props for the `WebDavSettings` component.
@@ -34,18 +36,24 @@ interface WebDavSettingsProps {
  *
  * Allows users to add new WebDAV accounts by providing vendor, credentials,
  * and file path information.
- * 
+ *
  * @param props - WebDavSettings component properties
- * 
+ *
  * @returns A JSX element rendering the WebDAV account form
  */
-const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSettingsProps) => {
+const WebDavSettings = ({
+  mode = "add",
+  editingIndex = null,
+  onClose
+}: WebDavSettingsProps) => {
   // Store state & actions
-  const webDavConfigs = useSettingsStore(state => (state.config.webDavConfigs))
-  const saving = useSettingsStore(state => state.saving)
-  const updateWebDavConfigs = useSettingsStore(state => state.updateWebDavConfigs)
-  const persistConfig = useSettingsStore(state => state.persistConfig)
-  const getNextPriority = useSettingsStore(state => state.getNextPriority)
+  const webDavConfigs = useSettingsStore((state) => state.config.webDavConfigs)
+  const saving = useSettingsStore((state) => state.saving)
+  const updateWebDavConfigs = useSettingsStore(
+    (state) => state.updateWebDavConfigs
+  )
+  const persistConfig = useSettingsStore((state) => state.persistConfig)
+  const getNextPriority = useSettingsStore((state) => state.getNextPriority)
 
   // Form state for adding a new WebDAV account.
   const [form, setForm] = useState<WebDAVUserConfig>({
@@ -54,7 +62,7 @@ const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSe
     password: "",
     filePath: DEFAULT_WEBDAV_FILEPATH,
     enabled: true,
-    priority: Number.MAX_SAFE_INTEGER,
+    priority: Number.MAX_SAFE_INTEGER
   })
 
   // Load custom vendors from config on mount and when config changes
@@ -85,7 +93,7 @@ const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSe
         password: "",
         filePath: DEFAULT_WEBDAV_FILEPATH,
         enabled: true,
-        priority: Number.MAX_SAFE_INTEGER,
+        priority: Number.MAX_SAFE_INTEGER
       })
     }
   }, [])
@@ -93,7 +101,10 @@ const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSe
   /**
    * All available vendors (built-in + custom).
    */
-  const vendors = WebDAVRegistry.getAllVendors().map(v => ({ label: v.name, value: v.id }))
+  const vendors = WebDAVRegistry.getAllVendors().map((v) => ({
+    label: v.name,
+    value: v.id
+  }))
 
   /**
    * Add a new WebDAV account to the configuration.
@@ -102,19 +113,23 @@ const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSe
    * and resets username/password fields.
    */
   const handleSubmit = async () => {
-    if (!form.username || !form.password) return void toast(messages.alert.incompleteInfo())
+    if (!form.username || !form.password)
+      return void toast(messages.alert.incompleteInfo())
     if (mode === "add") {
       const priority = await getNextPriority()
-      updateWebDavConfigs(draft => {
+      updateWebDavConfigs((draft) => {
         draft.push({ ...form, priority })
       })
       persistConfig()
       onClose()
     } else {
       if (editingIndex == null || editingIndex < 0) return
-      updateWebDavConfigs(draft => {
+      updateWebDavConfigs((draft) => {
         if (!draft[editingIndex]) return
-        draft[editingIndex] = { ...form, priority: draft[editingIndex].priority }
+        draft[editingIndex] = {
+          ...form,
+          priority: draft[editingIndex].priority
+        }
       })
       persistConfig()
       onClose()
@@ -128,16 +143,33 @@ const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSe
         {/* Icon container */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+            <svg
+              className="w-5 h-5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+              />
             </svg>
           </div>
           {/* Title */}
-          <h3 className="text-lg font-bold text-slate-800">{mode === "edit" ? messages.ui.webdavEdit() : messages.ui.webdavAdd()}</h3>
+          <h3 className="text-lg font-bold text-slate-800">
+            {mode === "edit"
+              ? messages.ui.webdavEdit()
+              : messages.ui.webdavAdd()}
+          </h3>
         </div>
 
         {/* Button to close the settings panel */}
-        <button onClick={onClose} className="text-xs text-slate-400 hover:text-slate-600">{messages.ui.cancel()}</button>
+        <button
+          onClick={onClose}
+          className="text-xs text-slate-400 hover:text-slate-600">
+          {messages.ui.cancel()}
+        </button>
       </div>
 
       {/* Add account form */}
@@ -174,13 +206,19 @@ const WebDavSettings = ({ mode = "add", editingIndex = null, onClose }: WebDavSe
         <Input
           label={messages.ui.filePath()}
           value={form.filePath}
-          onChange={(val) => setForm({ ...form, filePath: val || DEFAULT_WEBDAV_FILEPATH })}
+          onChange={(val) =>
+            setForm({ ...form, filePath: val || DEFAULT_WEBDAV_FILEPATH })
+          }
           placeholder={DEFAULT_WEBDAV_FILEPATH}
         />
 
         {/* Add account button */}
         <Button
-          label={mode === "edit" ? messages.ui.saveChanges() : messages.ui.addWebdav()}
+          label={
+            mode === "edit"
+              ? messages.ui.saveChanges()
+              : messages.ui.addWebdav()
+          }
           onClick={handleSubmit}
           loading={saving}
           className="bg-white border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900"

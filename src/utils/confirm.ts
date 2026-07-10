@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2"
 
 /**
  * Show a lightweight confirmation dialog.
@@ -20,15 +20,15 @@ export async function confirm(text: string): Promise<boolean> {
   const { isConfirmed } = await Swal.fire({
     text,
     showCancelButton: true,
-    width: '200px',
+    width: "200px",
     // Apply Tailwind classes through SweetAlert customClass slots.
     customClass: {
-      popup: 'rounded-xl border border-zinc-200 shadow-lg p-2',
-      htmlContainer: '!text-sm text-zinc-600 !m-1',
+      popup: "rounded-xl border border-zinc-200 shadow-lg p-2",
+      htmlContainer: "!text-sm text-zinc-600 !m-1",
       confirmButton: buttonStyle,
-      cancelButton: buttonStyle,
+      cancelButton: buttonStyle
     },
-    buttonsStyling: false,
+    buttonsStyling: false
   })
 
   return isConfirmed

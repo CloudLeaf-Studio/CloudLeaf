@@ -20,14 +20,10 @@ export interface SyncPayload {
 
 /**
  * Sync status between local and cloud
- * 
+ *
  * - `ahead` Local is newer than cloud
  * - `behind` Cloud is newer than local
  * - `synced` Both sides are in sync
  * - `none` No sync data available
  */
-export type SyncStatus =
-  | 'ahead'
-  | 'behind'
-  | 'synced'
-  | 'none'
+export type SyncStatus = "ahead" | "behind" | "synced" | "none"
