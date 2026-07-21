@@ -3,19 +3,7 @@ import {
   type BookmarkSystemRole,
   type SyncPayload
 } from "~src/types"
-import { consolo } from "~src/utils"
-
-/**
- * Runtime bookmarks API.
- *
- * @remarks Uses `browser` first for Firefox compatibility and falls back to `chrome`.
- */
-const runtimeApi = typeof browser !== "undefined" ? browser : chrome
-
-/**
- * Supported browser runtime families.
- */
-type BrowserType = "chrome" | "firefox"
+import { consolo, isFirefox, runtimeApi, type BrowserType } from "~src/utils"
 
 /**
  * Browser-specific IDs for top-level system folders.
@@ -140,8 +128,6 @@ export async function getBookmarks(): Promise<SyncPayload> {
       .withTag("core/bookmark/io")
       .info(`Start getting bookmarks from browser...`)
     const tree = await runtimeApi.bookmarks.getTree()
-    const currentBrowserType: BrowserType =
-      tree[0].id === "root________" ? "firefox" : "chrome"
     const collects = tree[0].children
     maxTimestamp = 0
     numBookmarks = 0
@@ -149,7 +135,7 @@ export async function getBookmarks(): Promise<SyncPayload> {
       .map((child) => processBookmarkNode(child, true))
       .filter((child): child is BookMark => child !== null)
 
-    if (currentBrowserType === "firefox") {
+    if (isFirefox) {
       const menuIndex = bookmarks.findIndex((node) => node.id === "menu")
       if (menuIndex >= 0) {
         const [menuFolder] = bookmarks.splice(menuIndex, 1)
@@ -213,9 +199,8 @@ export async function setBookmarks(payload: SyncPayload): Promise<void> {
   const tree = await runtimeApi.bookmarks.getTree()
   const root = tree[0]
 
-  const currentBrowserType: BrowserType =
-    root.id === "root________" ? "firefox" : "chrome"
-  const targetSystemFolderIds = SYSTEM_FOLDER_IDS[currentBrowserType]
+  const targetSystemFolderIds =
+    SYSTEM_FOLDER_IDS[isFirefox ? "firefox" : "chrome"]
   const systemFolderIdSet = new Set(Object.values(targetSystemFolderIds))
 
   // --- remove all bookmarks except system folders ---

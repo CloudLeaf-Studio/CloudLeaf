@@ -26,7 +26,7 @@ function SidePanel() {
     setLoading(true)
     setError(null)
     const res = await downloadBookmarks()
-    if (res.ok) {
+    if (res.ok && res.data?.payload) {
       setData(buildCountedTree(res.data.payload.bookmarks))
     } else {
       setError(res.error || messages.error.unknownError())

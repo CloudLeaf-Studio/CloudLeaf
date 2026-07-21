@@ -9,7 +9,7 @@ import { setBookmarks } from "~src/core/bookmark"
 import { useSync } from "~src/hooks"
 import { getCount } from "~src/store"
 import { type BookmarkCountCache } from "~src/types"
-import { confirm, consolo } from "~src/utils"
+import { confirm, consolo, isFirefox } from "~src/utils"
 
 import "./index.css"
 
@@ -201,7 +201,7 @@ function IndexPopup() {
   const handleOpenPreview = async () => {
     try {
       consolo.withTag("popup").info("Opening side panel for preview...")
-      if (typeof browser !== "undefined") await browser.sidebarAction.open()
+      if (isFirefox) await browser.sidebarAction.open()
       else {
         const window = await chrome.windows.getCurrent()
         await chrome.sidePanel.open({ windowId: window.id })
@@ -296,7 +296,7 @@ function IndexPopup() {
         />
 
         {/* Buttons to export and import bookmarks only in chrome */}
-        {typeof browser === "undefined" && (
+        {!isFirefox && (
           <div className="flex gap-3">
             {/* Button to export bookmarks */}
             <Button
