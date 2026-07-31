@@ -4,11 +4,11 @@
  * @packageDocumentation
  */
 
-import { GIST_ENDPOINTS, HttpStatus } from "~/src/constants"
-import { messages } from "~/src/i18n"
-import { HttpProvider } from "~/src/providers"
-import { type Result, type SyncPayload } from "~/src/types"
-import { consolo } from "~src/utils"
+import { GIST_ENDPOINTS, HttpStatus } from "~constants"
+import { messages } from "~i18n"
+import { HttpProvider } from "~providers"
+import { type Result, type SyncPayload } from "~types"
+import { consolo } from "~utils"
 
 /**
  * GitHub Gist storage provider
@@ -58,6 +58,15 @@ export class GistProvider extends HttpProvider {
   }
 
   /**
+   * Generate a target key for baseline identity.
+   *
+   * @returns Non-sensitive provider + Gist ID + filename identifier
+   */
+  getTargetKey(): string {
+    return `gist:${this.gistId}:${this.fileName}`
+  }
+
+  /**
    * Get base headers for GitHub API
    *
    * @returns Headers with GitHub API version
@@ -81,9 +90,9 @@ export class GistProvider extends HttpProvider {
   /**
    * Validate Gist configuration and access token
    *
-   * @returns Whether configuration is valid
+   * @returns Validation operation result containing the provider validity result
    */
-  async isValid(): Promise<Result<boolean>> {
+  async isValid(): Promise<Result<Result<void>>> {
     try {
       // --- Validate Gist exists ---
       const gistResponse = await this.request(
@@ -94,8 +103,10 @@ export class GistProvider extends HttpProvider {
       if (!gistResponse.ok) {
         return {
           ok: true,
-          data: false,
-          error: this.handleError(gistResponse).error
+          data: {
+            ok: false,
+            error: this.handleError(gistResponse).error
+          }
         }
       }
 
@@ -104,15 +115,21 @@ export class GistProvider extends HttpProvider {
         headers: { Authorization: `Bearer ${this.accessToken}` }
       })
       if (!userResponse.ok) {
-        return { ok: true, data: false, error: messages.error.invalidToken() }
+        return {
+          ok: true,
+          data: {
+            ok: false,
+            error: messages.error.invalidToken()
+          }
+        }
       }
 
       const gistData = await gistResponse.json()
       if (!gistData.files[this.fileName]) {
-        return { ok: true, data: true, status: HttpStatus.NOT_FOUND }
+        return { ok: true, data: { ok: true } }
       }
 
-      return { ok: true, data: true }
+      return { ok: true, data: { ok: true } }
     } catch (error) {
       return this.handleNetworkError(error)
     }

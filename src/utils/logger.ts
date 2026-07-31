@@ -6,8 +6,12 @@ import { createConsolo } from "@yingluan/consolo"
  * @remarks Keep this list synchronized with actual module paths used in consolo calls.
  */
 type LogScope =
+  | "background"
+  | "background/messages/triggerSync"
+  | "components/AutoSyncSettings"
   | "core/bookmark/io"
   | "core/sync/cloud"
+  | "core/sync/coordinator"
   | "core/sync/local"
   | "hooks/useSync"
   | "popup"

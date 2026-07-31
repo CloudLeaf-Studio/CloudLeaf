@@ -2,12 +2,9 @@ import { toast } from "sonner"
 import { create } from "zustand"
 import { immer } from "zustand/middleware/immer"
 
-import { messages } from "~/src/i18n"
-import {
-  DEFAULT_USER_CONFIG,
-  type UserConfig,
-  type WebDAVUserConfig
-} from "~src/types"
+import { DEFAULT_USER_CONFIG } from "~constants"
+import { messages } from "~i18n"
+import { type UserConfig, type WebDAVUserConfig } from "~types"
 
 import { getMaxPriority, getUserConfig, setUserConfig } from "./storage"
 

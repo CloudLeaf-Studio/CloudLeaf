@@ -16,3 +16,10 @@ export const isFirefox = process.env.PLASMO_BROWSER === "firefox"
  * @readonly
  */
 export const runtimeApi = isFirefox ? browser : chrome
+
+/**
+ * Runtime action (badge) API.
+ *
+ * @readonly
+ */
+export const actionApi = isFirefox ? browser.browserAction : chrome.action

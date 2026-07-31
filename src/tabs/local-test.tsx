@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 
-import { LocalProvider } from "~/src/providers"
-import type { SyncPayload } from "~/src/types"
+import { LocalProvider } from "~providers"
+import type { SyncPayload } from "~types"
 
 function LocalProviderTest() {
   const [log, setLog] = useState<string[]>([])
@@ -21,8 +21,10 @@ function LocalProviderTest() {
   const testDownload = async () => {
     const local = new LocalProvider()
     const result = await local.download()
-    addLog(`download: ok=${result.ok}, error=${result.error || "none"}`)
-    if (result.ok && result.data) {
+    addLog(
+      `download: ok=${result.ok}, error=${result.ok === true ? "none" : result.error || "none"}`
+    )
+    if (result.ok === true && result.data) {
       setPayload(result.data)
       addLog(
         `  bookmarks: ${result.data.numBookmarks}, updatedAt: ${new Date(result.data.updatedAt).toLocaleString()}`
@@ -39,15 +41,21 @@ function LocalProviderTest() {
     }
     const local = new LocalProvider()
     const result = await local.upload(payload)
-    addLog(`upload: ok=${result.ok}, error=${result.error || "none"}`)
+    addLog(
+      `upload: ok=${result.ok}, error=${result.ok === true ? "none" : result.error || "none"}`
+    )
   }
 
   // --- Download to device (export as JSON file) ---
   const downloadToDevice = async () => {
     const local = new LocalProvider()
     const result = await local.download()
-    if (!result.ok || !result.data) {
+    if (result.ok === false) {
       addLog(`Export failed: ${result.error || "unknown error"}`)
+      return
+    }
+    if (!result.data) {
+      addLog("Export failed: missing bookmark payload")
       return
     }
 
@@ -97,7 +105,7 @@ function LocalProviderTest() {
         const local = new LocalProvider()
         const result = await local.upload(data)
         addLog(
-          `Upload to browser: ok=${result.ok}, error=${result.error || "none"}`
+          `Upload to browser: ok=${result.ok}, error=${result.ok === true ? "none" : result.error || "none"}`
         )
       }
     } catch (error) {

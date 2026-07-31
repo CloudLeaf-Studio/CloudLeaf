@@ -1,4 +1,4 @@
-import { t } from "~/src/i18n"
+import { t } from "~i18n"
 
 /**
  * HTTP protocol status codes (RFC 7231)

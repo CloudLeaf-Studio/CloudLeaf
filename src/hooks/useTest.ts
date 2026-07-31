@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { toast } from "sonner"
 
-import { messages } from "~/src/i18n"
-import { GistProvider, WebDAVRegistry } from "~src/providers"
-import { type UserConfig } from "~src/types"
+import { messages } from "~i18n"
+import { GistProvider, WebDAVRegistry } from "~providers"
+import { type UserConfig } from "~types"
 
 /**
  * Hook for testing connectivity to configured sync providers.
@@ -45,11 +45,19 @@ export const useTest = () => {
         config.gist.fileName
       )
       const res = await provider.isValid()
-      toast(
-        res.ok && res.data
-          ? messages.alert.gistOk()
-          : messages.alert.gistFailed(res.error || "")
-      )
+      if (res.ok === false) {
+        toast(messages.alert.gistFailed(res.error || ""))
+        return
+      }
+      if (!res.data) {
+        toast(messages.alert.gistFailed(""))
+        return
+      }
+      if (res.data.ok === false) {
+        toast(messages.alert.gistFailed(res.data.error || ""))
+        return
+      }
+      toast(messages.alert.gistOk())
     } catch (e) {
       toast(messages.alert.exception(String(e)))
     } finally {
@@ -73,11 +81,19 @@ export const useTest = () => {
     try {
       const provider = WebDAVRegistry.createProvider(acc.vendorId, acc)
       const res = await provider.isValid()
-      toast(
-        res.ok && res.data
-          ? messages.alert.webdavOk(acc.username)
-          : messages.alert.webdavFailed(res.error || "")
-      )
+      if (res.ok === false) {
+        toast(messages.alert.webdavFailed(res.error || ""))
+        return
+      }
+      if (!res.data) {
+        toast(messages.alert.webdavFailed(""))
+        return
+      }
+      if (res.data.ok === false) {
+        toast(messages.alert.webdavFailed(res.data.error || ""))
+        return
+      }
+      toast(messages.alert.webdavOk(acc.username))
     } catch (e) {
       toast(messages.alert.exception(String(e)))
     } finally {

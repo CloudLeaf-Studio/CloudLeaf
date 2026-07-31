@@ -1,5 +1,5 @@
-import { t } from "~/src/i18n"
-import { type CustomVendorConfig, type WebDAVUserConfig } from "~/src/types"
+import { t } from "~i18n"
+import { type CustomVendorConfig, type WebDAVUserConfig } from "~types"
 
 import { WebDAVProvider } from "./webdav"
 

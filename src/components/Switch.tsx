@@ -29,7 +29,7 @@ interface SwitchProps {
  *
  * @returns A JSX element rendering a clickable switch
  */
-export const Switch = ({ label, enabled, onChange }: SwitchProps) => {
+const Switch = ({ label, enabled, onChange }: SwitchProps) => {
   return (
     <div
       className="flex items-center justify-between group cursor-pointer"
@@ -56,3 +56,5 @@ export const Switch = ({ label, enabled, onChange }: SwitchProps) => {
     </div>
   )
 }
+
+export default Switch

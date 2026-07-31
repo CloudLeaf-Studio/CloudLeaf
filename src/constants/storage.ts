@@ -11,3 +11,10 @@ export const CONFIG_KEY = "userConfig"
  * @readonly
  */
 export const COUNT_KEY = "bookmarkCount"
+
+/**
+ * Storage key for sync state.
+ *
+ * @readonly
+ */
+export const SYNC_STATE_KEY = "syncState"

@@ -497,6 +497,10 @@
         "message": "保存并注册云厂商",
         "description": "注册按钮"
     },
+    "ui_auto_sync": {
+        "message": "自动同步",
+        "description": "自动同步开关标签"
+    },
     "error_sync_status_check": {
         "message": "检查同步状态失败：$1",
         "description": "同步状态检查失败时的错误",
@@ -510,5 +514,29 @@
     "vendor_jianguoyun": {
         "message": "坚果云",
         "description": "坚果云厂商名称"
+    },
+    "alert_sync_conflict": {
+        "message": "检测到冲突，请通过选择上传或者下载手动解决",
+        "description": "检测到本地和云端内容冲突时的提示"
+    },
+    "ui_trigger_sync": {
+        "message": "手动同步",
+        "description": "手动触发同步按钮"
+    },
+    "ui_syncing": {
+        "message": "同步中...",
+        "description": "同步进行中按钮文案"
+    },
+    "sync_phase_uninitialized": {
+        "message": "未初始化",
+        "description": "同步阶段标签"
+    },
+    "sync_phase_ready": {
+        "message": "就绪",
+        "description": "同步阶段标签"
+    },
+    "sync_phase_conflict": {
+        "message": "冲突",
+        "description": "同步阶段标签"
     }
 }

@@ -1,15 +1,23 @@
+/**
+ * Popup page module.
+ *
+ * Main popup UI for quick upload, download, export and import of bookmarks
+ * with conflict detection and bookmark count display.
+ *
+ * @packageDocumentation
+ */
+
 import packageInfo from "package.json"
 import { useEffect, useState } from "react"
 import { toast, Toaster } from "sonner"
 
-import { messages } from "~/src/i18n"
-import { Button } from "~src/components"
-import { COUNT_KEY } from "~src/constants"
-import { setBookmarks } from "~src/core/bookmark"
-import { useSync } from "~src/hooks"
-import { getCount } from "~src/store"
-import { type BookmarkCountCache } from "~src/types"
-import { confirm, consolo, isFirefox } from "~src/utils"
+import { Button } from "~components"
+import { COUNT_KEY } from "~constants"
+import { useSync } from "~hooks"
+import { messages } from "~i18n"
+import { getCount, getSyncState } from "~store"
+import { type BookmarkCountCache, type SyncPhase } from "~types"
+import { confirm, consolo, isFirefox } from "~utils"
 
 import "./index.css"
 
@@ -30,6 +38,7 @@ function IndexPopup() {
 
   const [localCount, setLocalCount] = useState<number | null>(null)
   const [cloudCount, setCloudCount] = useState<number | null>(null)
+  const [syncPhase, setSyncPhase] = useState<SyncPhase | null>(null)
 
   // Fetch bookmark counts from storage and listen for changes
   useEffect(() => {
@@ -37,6 +46,8 @@ function IndexPopup() {
       setLocalCount(cache.local)
       setCloudCount(cache.cloud)
     })
+
+    getSyncState().then((state) => setSyncPhase(state.phase))
 
     /**
      * Listen for changes in chrome.storage and update counts accordingly.
@@ -65,15 +76,17 @@ function IndexPopup() {
   // Sync operations and state from useSync hook
   const {
     loading,
+    performUploadCheck,
     performUpload,
     performDownload,
     performExport,
-    performImport
+    performImport,
+    performApply
   } = useSync()
   /**
-   * Extension version from package.json.
+   * Extension version and homepage from package.json.
    */
-  const version = packageInfo.version
+  const { version, homepage } = packageInfo
 
   /**
    * Open the extension's options page.
@@ -89,31 +102,59 @@ function IndexPopup() {
    * allowing force upload if confirmed.
    */
   const handleUpload = async () => {
-    consolo.withTag("popup").info("Starting upload...")
-    const result = await performUpload()
-    if (!result.ok) {
+    consolo.withTag("popup").info("Starting upload check...")
+    const checkResult = await performUploadCheck()
+    if (checkResult.ok === false) {
       toast(
         messages.alert.uploadFailed(
-          result.error || messages.error.unknownError()
+          checkResult.error || messages.error.unknownError()
         )
       )
       return
     }
+    if (!checkResult.data) {
+      toast(messages.alert.uploadFailed(messages.error.unknownError()))
+      return
+    }
+    const { status, payload } = checkResult.data
+
     // status === 'behind' means cloud data is newer
-    if (result.data.status === "behind") {
+    if (status === "behind") {
       if (await confirm(messages.confirm.forceUpload())) {
-        await performUpload(true, result.data.payload)
+        const uploadResult = await performUpload(payload)
+        if (uploadResult.ok === false) {
+          toast(
+            messages.alert.uploadFailed(
+              uploadResult.error || messages.error.unknownError()
+            )
+          )
+          return
+        }
+
         consolo
           .withTag("popup")
           .info(`Force uploaded to providers after conflict detected.`)
         toast(messages.alert.forceUploadSuccess())
       }
+      //   // TODO: Consider if we should allow force upload in case of conflict, or just notify the user
+      // } else if (checkResult.data.status === "conflict") {
+      //   toast(messages.alert.syncConflict())
+      //   return
       // status === 'none' means no provider configured
-    } else if (result.data.status === "none") {
+    } else if (status === "none") {
       toast(messages.alert.noProvider())
       // Normal case: upload succeeded without conflicts
     } else {
-      await performUpload(true, result.data.payload)
+      const uploadResult = await performUpload(payload)
+      if (uploadResult.ok === false) {
+        toast(
+          messages.alert.uploadFailed(
+            uploadResult.error || messages.error.unknownError()
+          )
+        )
+        return
+      }
+
       consolo.withTag("popup").info(`Successfully uploaded to providers.`)
       toast(messages.alert.uploadSuccess())
     }
@@ -127,7 +168,7 @@ function IndexPopup() {
    */
   const handleDownload = async () => {
     const result = await performDownload()
-    if (!result.ok) {
+    if (result.ok === false) {
       toast(
         messages.alert.downloadFailed(
           result.error || messages.error.unknownError()
@@ -135,18 +176,36 @@ function IndexPopup() {
       )
       return
     }
+    if (!result.data) {
+      toast(messages.alert.downloadFailed(messages.error.unknownError()))
+      return
+    }
+    const { status, payload } = result.data
+
     // status === 'ahead' means local data is newer
-    if (result.data.status === "ahead") {
+    if (status === "ahead") {
+      if (!payload) {
+        toast(messages.alert.downloadFailed(messages.error.invalidData()))
+        return
+      }
       if (await confirm(messages.confirm.forceDownload())) {
-        await setBookmarks(result.data.payload)
+        await performApply(payload)
         toast(messages.alert.forceDownloadSuccess())
       }
+      //   // TODO: Consider if we should allow force download in case of conflict, or just notify the user
+      // } else if (result.data.status === "conflict") {
+      //   toast(messages.alert.syncConflict())
+      //   return
       // status === 'none' means no provider configured
-    } else if (result.data.status === "none") {
+    } else if (status === "none") {
       toast(messages.alert.noProvider())
       // Normal case: download succeeded without conflicts
     } else {
-      await setBookmarks(result.data.payload)
+      if (!payload) {
+        toast(messages.alert.downloadFailed(messages.error.invalidData()))
+        return
+      }
+      await performApply(payload)
       toast(messages.alert.downloadSuccess())
     }
   }
@@ -156,7 +215,7 @@ function IndexPopup() {
    */
   const handleExport = async () => {
     const result = await performExport()
-    if (!result.ok) {
+    if (result.ok === false) {
       toast(
         messages.alert.exportFailed(
           result.error || messages.error.unknownError()
@@ -175,7 +234,7 @@ function IndexPopup() {
    */
   const handleImport = async () => {
     const result = await performImport()
-    if (!result.ok) {
+    if (result.ok === false) {
       consolo.withTag("popup").error(`Import failed: ${result.error}`)
       toast(
         messages.alert.importFailed(
@@ -184,13 +243,19 @@ function IndexPopup() {
       )
       return
     }
-    if (result.data.status === "ahead") {
+    if (!result.data?.payload) {
+      toast(messages.alert.importFailed(messages.error.invalidData()))
+      return
+    }
+    const { status, payload } = result.data
+
+    if (status === "ahead") {
       if (await confirm(messages.confirm.forceImport())) {
-        await setBookmarks(result.data.payload)
+        await performApply(payload)
         toast(messages.alert.forceImportSuccess())
       }
     } else {
-      await setBookmarks(result.data.payload)
+      await performApply(payload)
       toast(messages.alert.importSuccess())
     }
   }
@@ -279,6 +344,13 @@ function IndexPopup() {
         </div>
       </header>
 
+      {/* Sync phase indicator */}
+      {syncPhase === "conflict" && (
+        <div className="text-xs text-red-500 text-center bg-red-50 py-1 rounded border border-red-200">
+          {messages.alert.syncConflict()}
+        </div>
+      )}
+
       {/* Action buttons */}
       <div className="flex flex-col gap-3">
         {/* Button to upload bookmarks */}
@@ -324,7 +396,7 @@ function IndexPopup() {
 
         {/* GitHub link */}
         <a
-          href="https://github.com/Ying-Luan/CloudLeaf"
+          href={homepage}
           target="_blank"
           rel="noreferrer"
           className="p-1 hover:text-slate-600 transition-colors"

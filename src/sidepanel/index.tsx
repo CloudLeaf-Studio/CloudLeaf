@@ -1,11 +1,20 @@
+/**
+ * Side panel module.
+ *
+ * Cloud bookmark preview panel displaying a recursive tree view
+ * of bookmarks from the configured sync provider.
+ *
+ * @packageDocumentation
+ */
+
 import { useEffect, useState } from "react"
 import { Toaster } from "sonner"
 
-import { messages } from "~/src/i18n"
-import { BookmarkItem } from "~src/components"
-import { buildCountedTree } from "~src/core/bookmark"
-import { downloadBookmarks } from "~src/core/sync"
-import { type CountedBookMark } from "~src/types"
+import { BookmarkItem } from "~components"
+import { buildCountedTree } from "~core/bookmark"
+import { downloadBookmarks } from "~core/sync"
+import { messages } from "~i18n"
+import { type CountedBookMark } from "~types"
 
 import "./index.css"
 
@@ -26,11 +35,17 @@ function SidePanel() {
     setLoading(true)
     setError(null)
     const res = await downloadBookmarks()
-    if (res.ok && res.data?.payload) {
-      setData(buildCountedTree(res.data.payload.bookmarks))
-    } else {
+    if (res.ok === false) {
       setError(res.error || messages.error.unknownError())
+      setLoading(false)
+      return
     }
+    if (!res.data?.payload) {
+      setError(messages.error.invalidData())
+      setLoading(false)
+      return
+    }
+    setData(buildCountedTree(res.data.payload.bookmarks))
     setLoading(false)
   }
 

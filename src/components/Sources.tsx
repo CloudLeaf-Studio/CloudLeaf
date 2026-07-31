@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 
-import { messages } from "~/src/i18n"
-import { useTest } from "~src/hooks"
-import { useSettingsStore } from "~src/store"
-import { type Editor, type SourceItem } from "~src/types"
-import { confirm } from "~src/utils"
+import { useTest } from "~hooks"
+import { messages } from "~i18n"
+import { useSettingsStore } from "~store"
+import { type Editor, type SourceItem } from "~types"
+import { confirm } from "~utils"
 
+import Card from "./Card"
 import SourceBoard from "./SourceBoard"
 
 /**
@@ -160,30 +161,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   }
 
   return (
-    <section className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-3 pb-2">
-        {/* Icon container */}
-        <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
-          <svg
-            className="w-5 h-5 text-slate-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
-            />
-          </svg>
-        </div>
-        {/* Title */}
-        <h3 className="text-lg font-bold text-slate-800 font-mono tracking-tight">
-          {messages.ui.enabledSources()}
-        </h3>
-      </div>
-
+    <Card icon="sources" title={messages.ui.enabledSources()}>
       {/* Content */}
       {!hasSources ? (
         /* Empty state */
@@ -261,7 +239,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
           )}
         </div>
       </div>
-    </section>
+    </Card>
   )
 }
 

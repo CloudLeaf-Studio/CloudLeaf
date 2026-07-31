@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
-import { messages } from "~/src/i18n"
-import { WebDAVRegistry } from "~src/providers"
+import { messages } from "~i18n"
+import { WebDAVRegistry } from "~providers"
 import {
   addCustomVendorToConfig,
   loadCustomVendorsFromConfig,
   removeCustomVendorFromConfig,
   useSettingsStore
-} from "~src/store"
-import { type CustomVendorConfig } from "~src/types"
-import { confirm } from "~src/utils"
+} from "~store"
+import { type CustomVendorConfig } from "~types"
+import { confirm } from "~utils"
 
 import Button from "./Button"
+import Card from "./Card"
 import Input from "./Input"
 
 /**
@@ -96,31 +97,7 @@ const WebDavVendorManager = () => {
   }
 
   return (
-    <section className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
-        {/* Icon container */}
-        <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-          <svg
-            className="w-5 h-5 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-            />
-          </svg>
-        </div>
-
-        {/* Title */}
-        <h3 className="text-lg font-bold text-slate-800 font-mono">
-          {messages.ui.vendorManager()}
-        </h3>
-      </div>
-
+    <Card icon="vendor" title={messages.ui.vendorManager()}>
       {/* Vendor list */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {allAvailableVendors.map((v) => (
@@ -195,7 +172,7 @@ const WebDavVendorManager = () => {
           className="bg-white border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900"
         />
       </div>
-    </section>
+    </Card>
   )
 }
 

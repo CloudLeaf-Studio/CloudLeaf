@@ -1,9 +1,9 @@
 import { useState } from "react"
 
-import { messages } from "~/src/i18n"
-import { type SourceItem } from "~src/types"
+import { messages } from "~i18n"
+import { type SourceItem } from "~types"
 
-import { Switch } from "./Switch"
+import Switch from "./Switch"
 
 /**
  * Props for the `SourceBoard` component.

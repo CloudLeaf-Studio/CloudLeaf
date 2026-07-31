@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 
-import { type Result, type SyncPayload } from "~/src/types"
+import { type Result, type SyncPayload } from "~types"
 
 /**
  * Abstract base class for storage providers
@@ -23,11 +23,18 @@ export abstract class BaseProvider {
   abstract readonly name: string
 
   /**
+   * Generate a target key for baseline identity.
+   *
+   * @returns Non-sensitive provider + data source identifier
+   */
+  abstract getTargetKey(): string
+
+  /**
    * Validate provider configuration
    *
-   * @returns Whether configuration is valid
+   * @returns Validation operation result containing the provider validity result
    */
-  abstract isValid(): Promise<Result<boolean>>
+  abstract isValid(): Promise<Result<Result<void>>>
 
   /**
    * Upload bookmarks to cloud

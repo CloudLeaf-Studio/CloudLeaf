@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { type CountedBookMark } from "~src/types"
+import { type CountedBookMark } from "~types"
 
 /**
  * Props for BookmarkItem component.
@@ -32,7 +32,7 @@ function BookmarkItem({ node, depth }: BookmarkItemProps) {
       <div
         className="flex items-center gap-2 p-1.5 hover:bg-white hover:shadow-sm rounded transition-all cursor-pointer group"
         style={{ paddingLeft: `${depth * 16 + 8}px` }}
-        title={!isFolder && node.url}
+        title={isFolder ? undefined : node.url}
         onClick={() =>
           isFolder
             ? setIsOpen(!isOpen)

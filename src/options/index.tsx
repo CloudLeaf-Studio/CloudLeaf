@@ -1,15 +1,25 @@
+/**
+ * Options page module.
+ *
+ * Provides the full settings interface for configuring sync sources,
+ * auto-sync behavior, Gist/WebDAV accounts and custom vendors.
+ *
+ * @packageDocumentation
+ */
+
 import { useEffect, useState } from "react"
 import { Toaster } from "sonner"
 
-import { messages } from "~/src/i18n"
 import {
+  AutoSyncSettings,
   GistSettings,
   Sources,
   WebDavSettings,
   WebDavVendorManager
-} from "~src/components"
-import { useSettingsStore } from "~src/store"
-import { type Editor } from "~src/types"
+} from "~components"
+import { messages } from "~i18n"
+import { useSettingsStore } from "~store"
+import { type Editor } from "~types"
 
 import "./index.css"
 
@@ -58,6 +68,9 @@ function OptionsPage() {
 
         {/* Main content sections */}
         <main className="space-y-6">
+          {/* Auto-sync settings */}
+          <AutoSyncSettings />
+
           {/* Sync sources management */}
           <Sources onOpenEditor={(opts) => setEditor(opts)} />
 

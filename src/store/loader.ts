@@ -1,5 +1,5 @@
-import { WebDAVRegistry } from "~/src/providers"
-import { type CustomVendorConfig, type UserConfig } from "~/src/types"
+import { WebDAVRegistry } from "~providers"
+import { type CustomVendorConfig, type UserConfig } from "~types"
 
 // TODO: consider changing config type from UserConfig to CustomVendorConfig[] for a clearer frontend surface; needs further analysis
 /**

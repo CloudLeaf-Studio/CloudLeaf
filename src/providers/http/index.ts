@@ -4,11 +4,11 @@
  * @packageDocumentation
  */
 
-import { HttpStatusMessage } from "~/src/constants"
-import { messages } from "~/src/i18n"
-import { BaseProvider } from "~/src/providers"
-import { type Result } from "~/src/types"
-import { consolo } from "~src/utils"
+import { messages } from "~/i18n"
+import { HttpStatusMessage } from "~constants"
+import { BaseProvider } from "~providers"
+import { type FailureResult } from "~types"
+import { consolo } from "~utils"
 
 /**
  * HTTP method types
@@ -125,7 +125,7 @@ export abstract class HttpProvider extends BaseProvider {
    *
    * @returns Error result
    */
-  protected handleError(response: Response): Result<never> {
+  protected handleError(response: Response): FailureResult {
     return {
       ok: false,
       status: response.status,
@@ -140,7 +140,7 @@ export abstract class HttpProvider extends BaseProvider {
    *
    * @returns Error result
    */
-  protected handleNetworkError(error: unknown): Result<never> {
+  protected handleNetworkError(error: unknown): FailureResult {
     consolo.withTag("providers/http").error("Network error")
     if (error instanceof Error) {
       if (error.name === "AbortError")

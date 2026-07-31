@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 
-import { messages } from "~/src/i18n"
-import { BaseProvider } from "~/src/providers"
-import { type Result, type SyncPayload } from "~/src/types"
-import { DEFAULT_FILENAME } from "~src/constants"
+import { DEFAULT_FILENAME } from "~constants"
+import { messages } from "~i18n"
+import { BaseProvider } from "~providers"
+import { type Result, type SyncPayload } from "~types"
 
 /**
  * Local file provider
@@ -25,12 +25,21 @@ export class LocalProvider extends BaseProvider {
   readonly name = "Local File"
 
   /**
+   * Generate a target key for baseline identity.
+   *
+   * @returns Fixed local identifier
+   */
+  getTargetKey(): string {
+    return "local"
+  }
+
+  /**
    * Validate local provider (always valid)
    *
-   * @returns Always true since local storage is always available
+   * @returns Successful validation containing a valid provider result
    */
-  async isValid(): Promise<Result<boolean>> {
-    return { ok: true, data: true }
+  async isValid(): Promise<Result<Result<void>>> {
+    return { ok: true, data: { ok: true } }
   }
 
   /**

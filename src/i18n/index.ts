@@ -4,6 +4,8 @@
  * @packageDocumentation
  */
 
+import type { SyncPhase } from "~types"
+
 /**
  * Get localized message from Chrome i18n API
  *
@@ -14,6 +16,17 @@
  */
 export function t(key: string, substitutions?: string | string[]): string {
   return chrome.i18n.getMessage(key, substitutions) || key
+}
+
+/**
+ * Mapping from sync phase to i18n message key.
+ *
+ * @readonly
+ */
+const SYNC_PHASE_I18N_KEYS: Record<SyncPhase, string> = {
+  uninitialized: "sync_phase_uninitialized",
+  ready: "sync_phase_ready",
+  conflict: "sync_phase_conflict"
 }
 
 /**
@@ -112,7 +125,9 @@ export const messages = {
     vendorDeleted: () => t("alert_vendor_deleted"),
     /** Vendor deletion failed */
     vendorDeleteFailed: (error: string) =>
-      t("alert_vendor_delete_failed", error)
+      t("alert_vendor_delete_failed", error),
+    /** Sync conflict detected */
+    syncConflict: () => t("alert_sync_conflict")
   },
 
   // === Confirm Messages ===
@@ -170,6 +185,10 @@ export const messages = {
     displayName: () => t("ui_display_name"),
     vendorPlaceholder: () => t("ui_vendor_placeholder"),
     serverUrl: () => t("ui_server_url"),
-    saveVendor: () => t("ui_save_vendor")
+    saveVendor: () => t("ui_save_vendor"),
+    autoSync: () => t("ui_auto_sync"),
+    triggerSync: () => t("ui_trigger_sync"),
+    syncing: () => t("ui_syncing"),
+    syncPhase: (phase: SyncPhase) => t(SYNC_PHASE_I18N_KEYS[phase])
   }
 }

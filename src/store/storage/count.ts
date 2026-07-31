@@ -1,5 +1,5 @@
-import { COUNT_KEY } from "~src/constants"
-import { type BookmarkCountCache } from "~src/types"
+import { COUNT_KEY } from "~constants"
+import { type BookmarkCountCache } from "~types"
 
 import { storage } from "./utils"
 

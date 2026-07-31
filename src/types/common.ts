@@ -1,23 +1,40 @@
 /**
- * Generic result wrapper for async operations
+ * Successful operation result.
  *
- * @typeParam T - The type of data returned on ok
+ * @typeParam T - Successful result data type
  */
-export interface Result<T> {
+export type SuccessResult<T> = {
   /**
-   * Whether the operation succeeded
+   * Successful operation marker
    */
-  ok: boolean
+  ok: true
   /**
-   * Result data, present when ok is true
+   * Optional result data
    */
   data?: T
+}
+
+/**
+ * Failed operation result.
+ */
+export type FailureResult = {
   /**
-   * Status code, if applicable
+   * Failed operation marker
+   */
+  ok: false
+  /**
+   * Optional status code
    */
   status?: number
   /**
-   * Error message, present when ok is false
+   * Optional error message
    */
   error?: string
 }
+
+/**
+ * Generic result wrapper for async operations.
+ *
+ * @typeParam T - Successful result data type
+ */
+export type Result<T> = SuccessResult<T> | FailureResult

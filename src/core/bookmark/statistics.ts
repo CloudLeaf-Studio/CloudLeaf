@@ -1,4 +1,4 @@
-import { type BookMark, type CountedBookMark } from "~src/types"
+import { type BookMark, type CountedBookMark } from "~types"
 
 /**
  * Count leaf bookmarks in a tree using iterative stack traversal.

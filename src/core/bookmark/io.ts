@@ -1,9 +1,12 @@
+import { getSyncState } from "~store"
 import {
   type BookMark,
   type BookmarkSystemRole,
   type SyncPayload
-} from "~src/types"
-import { consolo, isFirefox, runtimeApi, type BrowserType } from "~src/utils"
+} from "~types"
+import { consolo, isFirefox, runtimeApi, type BrowserType } from "~utils"
+
+import { calculateBookmarkHash } from "./hash"
 
 /**
  * Browser-specific IDs for top-level system folders.
@@ -53,10 +56,6 @@ function resolveSystemRoleById(id?: string): BookmarkSystemRole | null {
 }
 
 /**
- * maximum timestamp among all bookmark folders
- */
-let maxTimestamp = 0
-/**
  * number of bookmarks processed
  */
 let numBookmarks = 0
@@ -64,7 +63,7 @@ let numBookmarks = 0
 /**
  * Recursively process a chrome bookmark node into the internal `BookMark` interface.
  *
- * Updates module-level counters `maxTimestamp` and `numBookmarks` as a side effect.
+ * Updates module-level `numBookmarks` as a side effect.
  *
  * @param node - Chrome bookmark tree node
  * @param includeId - Whether to include id in the node
@@ -79,7 +78,6 @@ function processBookmarkNode(
 ): BookMark | null {
   // folder node
   if (node.children) {
-    maxTimestamp = Math.max(maxTimestamp, node.dateGroupModified || 0)
     const children = node.children
       .map((child) => processBookmarkNode(child, false))
       .filter((child): child is BookMark => child !== null)
@@ -120,7 +118,7 @@ function processBookmarkNode(
  *
  * @returns
  * Sync payload containing `bookmarks`, `numBookmarks`,
- * and `updatedAt` timestamp.
+ * `updatedAt` timestamp and `contentHash`.
  */
 export async function getBookmarks(): Promise<SyncPayload> {
   try {
@@ -129,7 +127,6 @@ export async function getBookmarks(): Promise<SyncPayload> {
       .info(`Start getting bookmarks from browser...`)
     const tree = await runtimeApi.bookmarks.getTree()
     const collects = tree[0].children
-    maxTimestamp = 0
     numBookmarks = 0
     const bookmarks = collects
       .map((child) => processBookmarkNode(child, true))
@@ -146,14 +143,25 @@ export async function getBookmarks(): Promise<SyncPayload> {
     consolo
       .withTag("core/bookmark/io")
       .info(
-        `Successfully got bookmarks from browser: ${numBookmarks} bookmarks, max timestamp: ${maxTimestamp}`
+        `Successfully got bookmarks from browser: ${numBookmarks} bookmarks`
       )
-    return { updatedAt: maxTimestamp || Date.now(), numBookmarks, bookmarks }
+    const state = await getSyncState()
+    return {
+      updatedAt: state.localUpdatedAt || Date.now(),
+      numBookmarks,
+      bookmarks,
+      contentHash: await calculateBookmarkHash(bookmarks)
+    }
 
     // error
   } catch (error) {
     consolo.withTag("core/bookmark/io").error("Failed to get bookmarks:", error)
-    return { updatedAt: Date.now(), numBookmarks: 0, bookmarks: [] }
+    return {
+      updatedAt: Date.now(),
+      numBookmarks: 0,
+      bookmarks: [],
+      contentHash: await calculateBookmarkHash([])
+    }
   }
 }
 

@@ -16,6 +16,10 @@ export interface UserConfig {
    * Custom cloud vendor metadata
    */
   customVendors?: CustomVendorConfig[]
+  /**
+   * Sync configuration
+   */
+  sync?: SyncConfig
 }
 
 /**
@@ -101,12 +105,11 @@ export interface CustomVendorConfig {
 }
 
 /**
- * Default user configuration
- *
- * @readonly
+ * Sync behavior configuration
  */
-export const DEFAULT_USER_CONFIG: UserConfig = {
-  gist: undefined,
-  webDavConfigs: [],
-  customVendors: []
+export interface SyncConfig {
+  /**
+   * Whether auto-sync is enabled
+   */
+  autoSyncEnabled?: boolean
 }

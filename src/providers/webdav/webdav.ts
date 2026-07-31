@@ -1,12 +1,8 @@
-import {
-  getWebDAVStatusMessage,
-  HttpStatus,
-  WebDAVStatus
-} from "~/src/constants"
-import { messages } from "~/src/i18n"
-import { HttpProvider } from "~/src/providers"
-import { type Result, type SyncPayload } from "~/src/types"
-import { consolo } from "~src/utils"
+import { getWebDAVStatusMessage, HttpStatus, WebDAVStatus } from "~constants"
+import { messages } from "~i18n"
+import { HttpProvider } from "~providers"
+import { type FailureResult, type Result, type SyncPayload } from "~types"
+import { consolo } from "~utils"
 
 /**
  * WebDAV protocol storage provider
@@ -14,18 +10,30 @@ import { consolo } from "~src/utils"
  * @remarks Extends HttpProvider with WebDAV-specific functionality
  */
 export class WebDAVProvider extends HttpProvider {
-  // Provider unique identifier
+  /**
+   * Unique provider identifier
+   */
   readonly id: string
-  // Provider display name
+  /**
+   * Provider display name
+   */
   readonly name: string
 
-  // WebDAV server URL
+  /**
+   * WebDAV server URL
+   */
   protected serverUrl: string
-  // WebDAV username
+  /**
+   * WebDAV username
+   */
   protected username: string
-  // WebDAV password
+  /**
+   * WebDAV password
+   */
   protected password: string
-  // File path for bookmark storage
+  /**
+   * File path for bookmark storage
+   */
   protected filePath: string
 
   /**
@@ -55,6 +63,15 @@ export class WebDAVProvider extends HttpProvider {
     this.filePath = this.normalizePath(filePath)
   }
 
+  /**
+   * Generate a target key for baseline identity.
+   *
+   * @returns Non-sensitive provider + user + path identifier
+   */
+  getTargetKey(): string {
+    return `webdav:${this.id}:${this.username}:${this.filePath}`
+  }
+
   protected get baseUrl(): string {
     return this.serverUrl
   }
@@ -62,9 +79,9 @@ export class WebDAVProvider extends HttpProvider {
   /**
    * Validate WebDAV configuration and connection
    *
-   * @returns Whether configuration is valid
+   * @returns Validation operation result containing the provider validity result
    */
-  async isValid(): Promise<Result<boolean>> {
+  async isValid(): Promise<Result<Result<void>>> {
     try {
       const response = await this.request("PROPFIND", this.filePath, {
         headers: { Depth: "0" }
@@ -74,29 +91,33 @@ export class WebDAVProvider extends HttpProvider {
 
       // --- File exists ---
       if (status === WebDAVStatus.MULTI_STATUS) {
-        return { ok: true, data: true, status }
+        return { ok: true, data: { ok: true } }
       }
 
       // --- File not found or conflict is OK ---
       if (status === HttpStatus.NOT_FOUND || status === WebDAVStatus.CONFLICT) {
-        return { ok: true, data: true, status }
+        return { ok: true, data: { ok: true } }
       }
 
       // --- Auth failure ---
       if (status === HttpStatus.UNAUTHORIZED) {
         return {
           ok: true,
-          data: false,
-          status,
-          error: this.getErrorMessage(status)
+          data: {
+            ok: false,
+            status,
+            error: this.getErrorMessage(status)
+          }
         }
       }
 
       return {
         ok: true,
-        data: false,
-        status,
-        error: this.getErrorMessage(status)
+        data: {
+          ok: false,
+          status,
+          error: this.getErrorMessage(status)
+        }
       }
     } catch (error) {
       return this.handleNetworkError(error)
@@ -127,7 +148,7 @@ export class WebDAVProvider extends HttpProvider {
         consolo
           .withTag("providers/webdav")
           .info(`Successfully uploaded to ${this.name}`)
-        return { ok: true, status: response.status }
+        return { ok: true }
       }
 
       return this.handleWebDAVError(response.status)
@@ -250,7 +271,7 @@ export class WebDAVProvider extends HttpProvider {
    *
    * @returns Error result
    */
-  protected handleWebDAVError(status: number): Result<never> {
+  protected handleWebDAVError(status: number): FailureResult {
     consolo
       .withTag("providers/webdav")
       .error(

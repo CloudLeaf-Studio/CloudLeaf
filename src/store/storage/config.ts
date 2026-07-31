@@ -1,5 +1,5 @@
-import { CONFIG_KEY } from "~/src/constants"
-import { DEFAULT_USER_CONFIG, type UserConfig } from "~/src/types"
+import { CONFIG_KEY, DEFAULT_USER_CONFIG } from "~constants"
+import type { UserConfig } from "~types"
 
 import { storage } from "./utils"
 
@@ -19,9 +19,12 @@ export async function getUserConfig(): Promise<UserConfig> {
   return {
     gist: config.gist,
     webDavConfigs: config.webDavConfigs || [],
-    customVendors: config.customVendors || []
+    customVendors: config.customVendors || [],
+    sync: config.sync
   }
 }
+
+/* eslint-disable tsdoc/syntax */
 
 /**
  * Get the highest priority number across all sources
@@ -57,3 +60,5 @@ export async function getMaxPriority(): Promise<number> {
 export async function setUserConfig(config: UserConfig): Promise<void> {
   await storage.set(CONFIG_KEY, config)
 }
+
+/* eslint-enable tsdoc/syntax */

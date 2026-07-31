@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
-import { messages } from "~/src/i18n"
-import { DEFAULT_WEBDAV_FILEPATH } from "~src/constants"
-import { WebDAVRegistry } from "~src/providers"
-import { loadCustomVendorsFromConfig, useSettingsStore } from "~src/store"
-import type { WebDAVUserConfig } from "~src/types"
+import { DEFAULT_WEBDAV_FILEPATH } from "~constants"
+import { messages } from "~i18n"
+import { WebDAVRegistry } from "~providers"
+import { loadCustomVendorsFromConfig, useSettingsStore } from "~store"
+import type { WebDAVUserConfig } from "~types"
 
 import Button from "./Button"
+import Card from "./Card"
 import Input from "./Input"
 import Select from "./Select"
 
@@ -137,41 +138,12 @@ const WebDavSettings = ({
   }
 
   return (
-    <section className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-50">
-        {/* Icon container */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-              />
-            </svg>
-          </div>
-          {/* Title */}
-          <h3 className="text-lg font-bold text-slate-800">
-            {mode === "edit"
-              ? messages.ui.webdavEdit()
-              : messages.ui.webdavAdd()}
-          </h3>
-        </div>
-
-        {/* Button to close the settings panel */}
-        <button
-          onClick={onClose}
-          className="text-xs text-slate-400 hover:text-slate-600">
-          {messages.ui.cancel()}
-        </button>
-      </div>
-
+    <Card
+      icon="webdav"
+      title={
+        mode === "edit" ? messages.ui.webdavEdit() : messages.ui.webdavAdd()
+      }
+      onCancel={onClose}>
       {/* Add account form */}
       <div className="p-4 bg-slate-50/50 rounded-xl border border-dashed border-slate-200 space-y-4">
         {/* Vendor and username inputs */}
@@ -224,7 +196,7 @@ const WebDavSettings = ({
           className="bg-white border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900"
         />
       </div>
-    </section>
+    </Card>
   )
 }
 
