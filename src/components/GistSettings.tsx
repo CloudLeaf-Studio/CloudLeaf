@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 import { DEFAULT_FILENAME } from "~constants"
 import { messages } from "~i18n"
@@ -31,9 +32,7 @@ interface GistSettingsProps {
 const GistSettings = ({ onClose }: GistSettingsProps) => {
   // Get config and actions from store
   const gistConfig = useSettingsStore((state) => state.config?.gist)
-  const saving = useSettingsStore((state) => state.saving)
   const updateConfig = useSettingsStore((state) => state.updateConfig)
-  const persistConfig = useSettingsStore((state) => state.persistConfig)
 
   // Local form state
   const [gist, setGist] = useState<GistConfig | null>(null)
@@ -82,7 +81,7 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
     updateConfig((draft) => {
       draft.gist = gist
     })
-    await persistConfig()
+    toast(messages.alert.settingsSaved())
     onClose()
   }
 
@@ -124,7 +123,6 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
         <div className="pt-2">
           <Button
             label={messages.ui.saveGist()}
-            loading={saving}
             onClick={handleSave}
             className="bg-white border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900"
           />

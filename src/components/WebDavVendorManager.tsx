@@ -26,9 +26,7 @@ import Input from "./Input"
  */
 const WebDavVendorManager = () => {
   const config = useSettingsStore((state) => state.config)
-  const saving = useSettingsStore((state) => state.saving)
   const updateConfig = useSettingsStore((state) => state.updateConfig)
-  const persistConfig = useSettingsStore((state) => state.persistConfig)
   // Form state for registering a new custom vendor.
   const [vendorForm, setVendorForm] = useState<CustomVendorConfig>({
     id: "",
@@ -66,7 +64,7 @@ const WebDavVendorManager = () => {
       updateConfig((draft) => {
         draft.customVendors = newVendors
       })
-      persistConfig()
+      toast(messages.alert.settingsSaved())
       setVendorForm({ id: "", name: "", serverUrl: "" })
       toast(messages.alert.vendorRegistered(name))
     } catch (e) {
@@ -89,7 +87,7 @@ const WebDavVendorManager = () => {
       updateConfig((draft) => {
         draft.customVendors = newVendors
       })
-      persistConfig()
+      toast(messages.alert.settingsSaved())
       toast(messages.alert.vendorDeleted())
     } catch (e) {
       toast(messages.alert.vendorDeleteFailed(String(e)))
@@ -168,7 +166,6 @@ const WebDavVendorManager = () => {
         <Button
           label={messages.ui.saveVendor()}
           onClick={handleAddVendor}
-          loading={saving}
           className="bg-white border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900"
         />
       </div>

@@ -29,6 +29,8 @@ export async function getUserConfig(): Promise<UserConfig> {
 /**
  * Get the highest priority number across all sources
  *
+ * @param config - Optional user config. When omitted, read from storage.
+ *
  * @returns Maximum priority value (higher = lower priority)
  *
  * @remarks
@@ -38,11 +40,11 @@ export async function getUserConfig(): Promise<UserConfig> {
  *
  * @see {@link src/store/settings.ts#useSettingsStore(state => state.getNextPriority)}
  */
-export async function getMaxPriority(): Promise<number> {
-  const config = await getUserConfig()
+export async function getMaxPriority(config?: UserConfig): Promise<number> {
+  const current = config ?? (await getUserConfig())
   const priorities = [
-    config.gist?.priority,
-    ...config.webDavConfigs.map((acc) => acc.priority)
+    current.gist?.priority,
+    ...current.webDavConfigs.map((acc) => acc.priority)
   ]
 
   return Math.max(0, ...priorities)

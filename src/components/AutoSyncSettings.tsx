@@ -21,7 +21,6 @@ const AutoSyncSettings = () => {
     (state) => state.config.sync?.autoSyncEnabled ?? false
   )
   const updateConfig = useSettingsStore((state) => state.updateConfig)
-  const persistConfig = useSettingsStore((state) => state.persistConfig)
   /**
    * Current sync phase, or null if auto-sync is disabled.
    */
@@ -48,7 +47,6 @@ const AutoSyncSettings = () => {
     updateConfig((draft) => {
       draft.sync = { ...draft.sync, autoSyncEnabled: val }
     })
-    persistConfig(true)
   }
 
   /**

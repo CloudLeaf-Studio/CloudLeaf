@@ -36,15 +36,9 @@ import "./index.css"
 function OptionsPage() {
   // Get loading state from store
   const initializing = useSettingsStore((state) => state.initializing)
-  const loadConfig = useSettingsStore((state) => state.loadConfig)
 
   // Local UI state for editor panel
   const [editor, setEditor] = useState<null | Editor>(null)
-
-  useEffect(() => {
-    // Load user configuration on mount
-    loadConfig()
-  }, [loadConfig])
 
   // fix page title localization
   useEffect(() => {

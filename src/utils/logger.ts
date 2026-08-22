@@ -18,6 +18,7 @@ type LogScope =
   | "providers/gist"
   | "providers/http"
   | "providers/webdav"
+  | "store/settings"
   | "utils/logger"
 
 /**

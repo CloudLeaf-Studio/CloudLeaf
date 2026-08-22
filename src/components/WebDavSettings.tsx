@@ -49,11 +49,9 @@ const WebDavSettings = ({
 }: WebDavSettingsProps) => {
   // Store state & actions
   const webDavConfigs = useSettingsStore((state) => state.config.webDavConfigs)
-  const saving = useSettingsStore((state) => state.saving)
   const updateWebDavConfigs = useSettingsStore(
     (state) => state.updateWebDavConfigs
   )
-  const persistConfig = useSettingsStore((state) => state.persistConfig)
   const getNextPriority = useSettingsStore((state) => state.getNextPriority)
 
   // Form state for adding a new WebDAV account.
@@ -121,7 +119,7 @@ const WebDavSettings = ({
       updateWebDavConfigs((draft) => {
         draft.push({ ...form, priority })
       })
-      persistConfig()
+      toast(messages.alert.settingsSaved())
       onClose()
     } else {
       if (editingIndex == null || editingIndex < 0) return
@@ -132,7 +130,7 @@ const WebDavSettings = ({
           priority: draft[editingIndex].priority
         }
       })
-      persistConfig()
+      toast(messages.alert.settingsSaved())
       onClose()
     }
   }
@@ -192,7 +190,6 @@ const WebDavSettings = ({
               : messages.ui.addWebdav()
           }
           onClick={handleSubmit}
-          loading={saving}
           className="bg-white border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900"
         />
       </div>

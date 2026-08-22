@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { toast } from "sonner"
 
 import { useTest } from "~hooks"
 import { messages } from "~i18n"
@@ -34,9 +35,7 @@ interface SourcesProps {
 const Sources = ({ onOpenEditor }: SourcesProps) => {
   // Get config from store
   const config = useSettingsStore((state) => state.config)
-  const saving = useSettingsStore((state) => state.saving)
   const updateConfig = useSettingsStore((state) => state.updateConfig)
-  const persistConfig = useSettingsStore((state) => state.persistConfig)
 
   // Hook state and helpers for saving and testing providers
   const { testingMap, testGist, testWebDav } = useTest()
@@ -80,7 +79,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
     updateConfig((draft) => {
       draft.gist = undefined
     })
-    persistConfig()
+    toast(messages.alert.settingsSaved())
   }
 
   /**
@@ -93,7 +92,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
     updateConfig((draft) => {
       draft.webDavConfigs!.splice(index, 1)
     })
-    persistConfig()
+    toast(messages.alert.settingsSaved())
   }
 
   /**
@@ -118,7 +117,6 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
         draft.webDavConfigs[targetSource.rawIndex!].priority =
           targetPriority + 1
     })
-    persistConfig(true)
   }
 
   /**
@@ -143,7 +141,6 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
         draft.webDavConfigs[targetSource.rawIndex!].priority =
           targetPriority - 1
     })
-    persistConfig(true)
   }
 
   /**
@@ -157,7 +154,6 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
       if (source.type === "gist") draft.gist!.enabled = enabled
       else draft.webDavConfigs[source.rawIndex!].enabled = enabled
     })
-    persistConfig(true)
   }
 
   return (
@@ -186,7 +182,6 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
                   removeGist={removeGist}
                   removeWebDav={removeWebDav}
                   isTesting={isTesting}
-                  saving={saving}
                   onMoveUp={onMoveUp}
                   onMoveDown={onMoveDown}
                   index={i}

@@ -36,10 +36,6 @@ interface SourceBoardProps {
    */
   isTesting: boolean
   /**
-   * Whether a save operation is in progress
-   */
-  saving: boolean
-  /**
    * Move this source up in the list by decrease its priority
    */
   onMoveUp: (index: number) => void
@@ -79,7 +75,6 @@ const SourceBoard = ({
   removeGist,
   removeWebDav,
   isTesting,
-  saving,
   onMoveUp,
   onMoveDown,
   index,
@@ -249,7 +244,6 @@ const SourceBoard = ({
                 onClick={() =>
                   isGist ? removeGist() : removeWebDav(source.rawIndex!)
                 }
-                disabled={saving}
                 className={`
                     px-4 py-2 rounded-md text-[11px] transition-all cursor-pointer font-bold
                     ${
