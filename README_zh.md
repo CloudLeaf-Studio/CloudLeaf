@@ -13,7 +13,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 [![Plasmo](https://img.shields.io/badge/Built%20with-Plasmo-blue)](https://docs.plasmo.com/)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/635543f1c45042b191b09831fb6ff3b8)](https://app.codacy.com/gh/Ying-Luan/CloudLeaf/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ccf2c7a6d3c44c16b90100c80e8f7ba7)](https://app.codacy.com/gh/CloudLeaf-Studio/CloudLeaf/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 [English](README.md) | [中文](README_zh.md)
 

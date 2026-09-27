@@ -20,5 +20,7 @@ export function addListeners(
     .withTag("background")
     .info(`adding listeners for ${valid.length}/${events.length} events`)
   valid.forEach((e) => e.addListener(handler))
-  return () => valid.forEach((e) => e.removeListener(handler))
+  return () => {
+    valid.forEach((e) => e.removeListener(handler))
+  }
 }

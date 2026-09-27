@@ -50,7 +50,7 @@ function SidePanel() {
   }
 
   useEffect(() => {
-    handleLoadCloudBookmarks()
+    void handleLoadCloudBookmarks()
   }, [])
 
   return (

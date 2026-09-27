@@ -97,7 +97,9 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
         <Input
           label="Access Token"
           value={gist?.accessToken || ""}
-          onChange={(val) => handleChange("accessToken", val)}
+          onChange={(val) => {
+            handleChange("accessToken", val)
+          }}
           type="password"
           placeholder="ghp_xxxxxxxxxxxx"
         />
@@ -106,7 +108,9 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
         <Input
           label="Gist ID"
           value={gist?.gistId || ""}
-          onChange={(val) => handleChange("gistId", val)}
+          onChange={(val) => {
+            handleChange("gistId", val)
+          }}
           placeholder={messages.ui.gistIdPlaceholder()}
         />
 
@@ -115,7 +119,9 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
           label={messages.ui.filename()}
           type="text"
           value={gist?.fileName || ""}
-          onChange={(val) => handleChange("fileName", val || DEFAULT_FILENAME)}
+          onChange={(val) => {
+            handleChange("fileName", val || DEFAULT_FILENAME)
+          }}
           placeholder={DEFAULT_FILENAME}
         />
 

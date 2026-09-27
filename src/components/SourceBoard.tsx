@@ -128,7 +128,9 @@ const SourceBoard = ({
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {/* Expand/collapse button */}
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              setIsExpanded(!isExpanded)
+            }}
             className={`p-1 -ml-1 transition-transform duration-300 cursor-pointer ${isExpanded ? "rotate-180" : ""}`}>
             {/* Expand/collapse icon */}
             <svg
@@ -167,7 +169,9 @@ const SourceBoard = ({
           <div className="flex bg-black/5 rounded p-0.5 gap-1">
             {/* Button to move source up by decreasing its priority */}
             <button
-              onClick={() => onMoveUp(index)}
+              onClick={() => {
+                onMoveUp(index)
+              }}
               disabled={index === 0}
               className={`${btnBase} ${moveBtnTheme} px-2`}>
               ▲
@@ -175,7 +179,9 @@ const SourceBoard = ({
 
             {/* Button to move source down by increasing its priority */}
             <button
-              onClick={() => onMoveDown(index)}
+              onClick={() => {
+                onMoveDown(index)
+              }}
               disabled={index === total - 1}
               className={`${btnBase} ${moveBtnTheme} px-2`}>
               ▼

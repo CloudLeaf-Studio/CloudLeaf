@@ -33,7 +33,9 @@ const Switch = ({ label, enabled, onChange }: SwitchProps) => {
   return (
     <div
       className="flex items-center justify-between group cursor-pointer"
-      onClick={() => onChange(!enabled)}>
+      onClick={() => {
+        onChange(!enabled)
+      }}>
       {/* Switch label */}
       <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">
         {label}
