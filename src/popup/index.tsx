@@ -47,7 +47,9 @@ function IndexPopup() {
       setCloudCount(cache.cloud)
     })
 
-    getSyncState().then((state) => setSyncPhase(state.phase))
+    getSyncState().then((state) => {
+      setSyncPhase(state.phase)
+    })
 
     /**
      * Listen for changes in chrome.storage and update counts accordingly.

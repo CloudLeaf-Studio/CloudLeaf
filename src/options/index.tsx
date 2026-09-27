@@ -66,11 +66,19 @@ function OptionsPage() {
           <AutoSyncSettings />
 
           {/* Sync sources management */}
-          <Sources onOpenEditor={(opts) => setEditor(opts)} />
+          <Sources
+            onOpenEditor={(opts) => {
+              setEditor(opts)
+            }}
+          />
 
           {/* Inline editor panel: Gist or WebDAV */}
           {editor?.type === "gist" && (
-            <GistSettings onClose={() => setEditor(null)} />
+            <GistSettings
+              onClose={() => {
+                setEditor(null)
+              }}
+            />
           )}
 
           {/* WebDAV account editor/add section (conditional) */}
@@ -78,7 +86,9 @@ function OptionsPage() {
             <WebDavSettings
               mode={editor.mode}
               editingIndex={editor.index ?? null}
-              onClose={() => setEditor(null)}
+              onClose={() => {
+                setEditor(null)
+              }}
             />
           )}
 

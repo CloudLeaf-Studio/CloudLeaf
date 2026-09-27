@@ -151,14 +151,18 @@ const WebDavSettings = ({
             label={messages.ui.selectVendor()}
             value={form.vendorId}
             options={vendors}
-            onChange={(val) => setForm({ ...form, vendorId: val })}
+            onChange={(val) => {
+              setForm({ ...form, vendorId: val })
+            }}
           />
 
           {/* Username input */}
           <Input
             label={messages.ui.username()}
             value={form.username}
-            onChange={(val) => setForm({ ...form, username: val })}
+            onChange={(val) => {
+              setForm({ ...form, username: val })
+            }}
             placeholder="Account Email"
           />
         </div>
@@ -168,7 +172,9 @@ const WebDavSettings = ({
           label={messages.ui.appPassword()}
           value={form.password}
           type="password"
-          onChange={(val) => setForm({ ...form, password: val })}
+          onChange={(val) => {
+            setForm({ ...form, password: val })
+          }}
           placeholder="App Password"
         />
 
@@ -176,9 +182,9 @@ const WebDavSettings = ({
         <Input
           label={messages.ui.filePath()}
           value={form.filePath}
-          onChange={(val) =>
+          onChange={(val) => {
             setForm({ ...form, filePath: val || DEFAULT_WEBDAV_FILEPATH })
-          }
+          }}
           placeholder={DEFAULT_WEBDAV_FILEPATH}
         />
 

@@ -58,7 +58,7 @@ addListeners(
     consolo
       .withTag("background")
       .info("bookmark change detected, scheduling sync and count refresh")
-    markLocalUpdated()
+    void markLocalUpdated()
     if (!applyingCloud.value) schedule(5000)
     debouncedCountRefresh()
   }
@@ -113,4 +113,4 @@ async function init() {
   }
 }
 
-init()
+void init()

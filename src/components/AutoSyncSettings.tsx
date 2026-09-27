@@ -32,7 +32,9 @@ const AutoSyncSettings = () => {
 
   useEffect(() => {
     if (autoSync) {
-      getSyncState().then((s) => setPhase(s.phase))
+      getSyncState().then((s) => {
+        setPhase(s.phase)
+      })
     } else {
       setPhase(null)
     }

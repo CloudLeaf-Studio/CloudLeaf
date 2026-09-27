@@ -141,7 +141,9 @@ const WebDavVendorManager = () => {
           <Input
             label={messages.ui.vendorId()}
             value={vendorForm.id}
-            onChange={(val) => setVendorForm({ ...vendorForm, id: val })}
+            onChange={(val) => {
+              setVendorForm({ ...vendorForm, id: val })
+            }}
             placeholder="my-server"
           />
 
@@ -149,7 +151,9 @@ const WebDavVendorManager = () => {
           <Input
             label={messages.ui.displayName()}
             value={vendorForm.name}
-            onChange={(val) => setVendorForm({ ...vendorForm, name: val })}
+            onChange={(val) => {
+              setVendorForm({ ...vendorForm, name: val })
+            }}
             placeholder={messages.ui.vendorPlaceholder()}
           />
         </div>
@@ -158,7 +162,9 @@ const WebDavVendorManager = () => {
         <Input
           label={messages.ui.serverUrl()}
           value={vendorForm.serverUrl}
-          onChange={(val) => setVendorForm({ ...vendorForm, serverUrl: val })}
+          onChange={(val) => {
+            setVendorForm({ ...vendorForm, serverUrl: val })
+          }}
           placeholder="https://dav.example.com/dav"
         />
 

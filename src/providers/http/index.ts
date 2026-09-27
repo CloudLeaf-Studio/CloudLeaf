@@ -88,7 +88,9 @@ export abstract class HttpProvider extends BaseProvider {
   ): Promise<Response> {
     const url = `${this.baseUrl}${path}`
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
+    const timeoutId = setTimeout(() => {
+      controller.abort()
+    }, this.timeout)
 
     try {
       const response = await fetch(url, {

@@ -68,7 +68,9 @@ const Select = ({
       {/* Select input with custom dropdown arrow */}
       <select
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value)
+        }}
         className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900 transition-all font-mono text-sm cursor-pointer appearance-none"
         style={{
           backgroundImage:
