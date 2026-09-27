@@ -1,9 +1,9 @@
 /**
  * Storage module
- * 
+ *
  * @packageDocumentation
  */
 
-export * from "./config"
+export * from "./storage"
 export * from "./loader"
 export * from "./settings"

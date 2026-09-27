@@ -1,24 +1,12 @@
 {
   "extends": "plasmo/templates/tsconfig.base",
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    ".plasmo/index.d.ts",
-    "./**/*.ts",
-    "./**/*.tsx"
-  ],
+  "exclude": ["node_modules"],
+  "include": [".plasmo/index.d.ts", "./**/*.ts", "./**/*.tsx"],
   "compilerOptions": {
     "ignoreDeprecations": "6.0",
-    "types": [
-      "node",
-      "firefox-webext-browser",
-      "chrome",
-    ],
+    "types": ["node", "firefox-webext-browser", "chrome"],
     "paths": {
-      "~*": [
-        "./*"
-      ]
+      "~*": ["./src/*"]
     },
     "baseUrl": "."
   }

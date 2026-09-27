@@ -16,13 +16,13 @@ interface ButtonProps {
   onClick: () => void | Promise<void>
   /**
    * Whether the button shows a loading spinner and is disabled.
-   * 
+   *
    * @defaultValue false
    */
   loading?: boolean
   /**
    * Disable the button (non-interactive).
-   * 
+   *
    * @defaultValue false
    */
   disabled?: boolean
@@ -34,9 +34,9 @@ interface ButtonProps {
 
 /**
  * Simple styled button component with optional loading state.
- * 
+ *
  * @param props - Button properties
- * 
+ *
  * @returns A JSX button element
  */
 const Button = ({
@@ -44,7 +44,7 @@ const Button = ({
   onClick,
   loading = false,
   disabled = false,
-  className = "",
+  className = ""
 }: ButtonProps) => {
   const baseStyles = `
     w-full py-2 bg-white text-slate-700
@@ -52,22 +52,26 @@ const Button = ({
     transition-all flex items-center justify-center gap-2
     font-mono text-sm font-medium tracking-tight
   `
-  const stateStyles = (disabled || loading)
-    ? "opacity-50 cursor-not-allowed"
-    : "hover:bg-slate-50 active:scale-95 cursor-pointer"
+  const stateStyles =
+    disabled || loading
+      ? "opacity-50 cursor-not-allowed"
+      : "hover:bg-slate-50 active:scale-95 cursor-pointer"
 
   return (
     <button
       onClick={onClick}
       disabled={disabled || loading}
-      className={`${baseStyles} ${stateStyles} ${className}`}
-    >
+      className={`${baseStyles} ${stateStyles} ${className}`}>
       {/* When loading is true, show a spinner */}
       {loading && (
-        <svg className="animate-spin h-4 w-4 text-slate-500" viewBox="0 0 24 24">
+        <svg
+          className="animate-spin h-4 w-4 text-slate-500"
+          viewBox="0 0 24 24">
           <circle
             className="opacity-25"
-            cx="12" cy="12" r="10"
+            cx="12"
+            cy="12"
+            r="10"
             stroke="currentColor"
             strokeWidth="4"
             fill="none"

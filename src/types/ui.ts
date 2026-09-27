@@ -1,6 +1,6 @@
 /**
  * UI representation of a sync source for settings display
- * 
+ *
  * @remarks
  * Used in Sources component to render and manage sync providers.
  *
@@ -40,13 +40,13 @@ export interface Editor {
   /**
    * Edit mode
    */
-  mode: "add" | "edit",
+  mode: "add" | "edit"
   /**
    * Provider type to edit
    */
-  type: "gist" | "webdav",
+  type: "gist" | "webdav"
   /**
    * Index of the item to edit (for edit mode and webdav only)
    */
-  index?: number,
+  index?: number
 }

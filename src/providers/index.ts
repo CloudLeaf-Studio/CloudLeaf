@@ -1,8 +1,8 @@
 /**
  * Providers module
- * 
+ *
  * @packageDocumentation
- * 
+ *
  * @remarks Provider hierarchy: BaseProvider -\> HttpProvider -\> GistProvider/WebDAVProvider; LocalProvider
  */
 
@@ -14,6 +14,5 @@ export * from "./http"
 export * from "./local"
 
 // L3: Concrete implementations
-export * from './gist'
+export * from "./gist"
 export * from "./webdav"
-

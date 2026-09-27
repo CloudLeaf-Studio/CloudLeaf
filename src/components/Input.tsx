@@ -16,13 +16,13 @@ interface InputProps {
   value: string
   /**
    * Callback invoked when the input value changes.
-   * 
+   *
    * @param val - New input value
    */
   onChange: (val: string) => void
   /**
    * Input `type` attribute.
-   * 
+   *
    * @defaultValue "text"
    */
   type?: "text" | "password"
@@ -38,9 +38,9 @@ interface InputProps {
 
 /**
  * Simple labeled input with default styling.
- * 
+ *
  * @param props - Input properties
- * 
+ *
  * @returns A JSX element containing a labeled input
  */
 const Input = ({

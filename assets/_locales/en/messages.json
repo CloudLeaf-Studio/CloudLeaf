@@ -497,6 +497,10 @@
         "message": "Save & Register Vendor",
         "description": "Register vendor button"
     },
+    "ui_auto_sync": {
+        "message": "Auto Sync",
+        "description": "Auto sync toggle label"
+    },
     "error_sync_status_check": {
         "message": "Failed to check sync status from $1",
         "description": "Error when sync status check fails",
@@ -510,5 +514,33 @@
     "vendor_jianguoyun": {
         "message": "Nutstore",
         "description": "Jianguoyun vendor name"
+    },
+    "alert_sync_conflict": {
+        "message": "Conflict detected. Resolve manually by uploading or downloading.",
+        "description": "Alert when local and cloud have conflicting content"
+    },
+    "ui_trigger_sync": {
+        "message": "Trigger Sync",
+        "description": "Button to manually trigger auto-sync"
+    },
+    "ui_syncing": {
+        "message": "Syncing...",
+        "description": "Button label when sync is in progress"
+    },
+    "sync_phase_uninitialized": {
+        "message": "Uninitialized",
+        "description": "Sync phase label"
+    },
+    "sync_phase_ready": {
+        "message": "Ready",
+        "description": "Sync phase label"
+    },
+    "sync_phase_conflict": {
+        "message": "Conflict",
+        "description": "Sync phase label"
+    },
+    "sync_please_manual_upload_or_download": {
+        "message": "Please manually upload or download to initialize",
+        "description": "Hint when sync phase is uninitialized"
     }
 }

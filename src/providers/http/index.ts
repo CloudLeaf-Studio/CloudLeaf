@@ -1,34 +1,29 @@
 /**
  * HTTP provider module
- * 
+ *
  * @packageDocumentation
  */
 
-import { type Result } from "~/src/types"
-import { BaseProvider } from "~/src/providers"
-import { HttpStatusMessage } from "~/src/constants"
-import { messages } from "~/src/i18n"
-import { consolo } from "~src/utils"
+import { messages } from "~/i18n"
+import { HttpStatusMessage } from "~constants"
+import { BaseProvider } from "~providers"
+import { type FailureResult } from "~types"
+import { consolo } from "~utils"
 
 /**
  * HTTP method types
- * 
+ *
  * - `GET` Retrieve resource
  * - `PATCH` Partial update
  * - `PROPFIND` WebDAV property retrieval
  * - `PUT` Create or replace resource
  * - `MKCOL` WebDAV create collection
  */
-type Method =
-  | "GET"
-  | "PATCH"
-  | "PROPFIND"
-  | "PUT"
-  | "MKCOL"
+type Method = "GET" | "PATCH" | "PROPFIND" | "PUT" | "MKCOL"
 
 /**
  * Abstract HTTP protocol provider
- * 
+ *
  * @remarks Encapsulates common HTTP request logic
  */
 export abstract class HttpProvider extends BaseProvider {
@@ -44,43 +39,43 @@ export abstract class HttpProvider extends BaseProvider {
 
   /**
    * Get authentication headers
-   * 
+   *
    * @returns Headers with auth credentials
-   * 
+   *
    * @remarks Must be implemented by subclasses
    */
   protected abstract getAuthHeaders(): Record<string, string>
 
   /**
    * Get base request headers
-   * 
+   *
    * @returns Default headers
    */
   protected getBaseHeaders(): Record<string, string> {
     return {
-      "Content-Type": "application/json; charset=utf-8",
+      "Content-Type": "application/json; charset=utf-8"
     }
   }
 
   /**
    * Merge all request headers
-   * 
+   *
    * @returns Combined base and auth headers
    */
   protected getAllHeaders(): Record<string, string> {
     return {
       ...this.getBaseHeaders(),
-      ...this.getAuthHeaders(),
+      ...this.getAuthHeaders()
     }
   }
 
   /**
    * Send HTTP request
-   * 
+   *
    * @param method - HTTP method
    * @param path - Request path
    * @param options - Optional config (body, headers)
-   * 
+   *
    * @returns Fetch response
    */
   protected async request(
@@ -100,11 +95,11 @@ export abstract class HttpProvider extends BaseProvider {
         method,
         headers: {
           ...this.getAllHeaders(),
-          ...options?.headers,
+          ...options?.headers
         },
         body: options?.body ? JSON.stringify(options.body) : undefined,
         signal: controller.signal,
-        credentials: 'omit',
+        credentials: "omit"
       })
       return response
     } finally {
@@ -114,9 +109,9 @@ export abstract class HttpProvider extends BaseProvider {
 
   /**
    * Get HTTP error message by status code
-   * 
+   *
    * @param status - HTTP status code
-   * 
+   *
    * @returns Human-readable error message
    */
   protected getHttpErrorMessage(status: number): string {
@@ -125,26 +120,31 @@ export abstract class HttpProvider extends BaseProvider {
 
   /**
    * Handle HTTP error response
-   * 
+   *
    * @param response - HTTP response object
-   * 
+   *
    * @returns Error result
    */
-  protected handleError(response: Response): Result<never> {
-    return { ok: false, status: response.status, error: this.getHttpErrorMessage(response.status) }
+  protected handleError(response: Response): FailureResult {
+    return {
+      ok: false,
+      status: response.status,
+      error: this.getHttpErrorMessage(response.status)
+    }
   }
 
   /**
    * Handle network exceptions
-   * 
+   *
    * @param error - Caught error object
-   * 
+   *
    * @returns Error result
    */
-  protected handleNetworkError(error: unknown): Result<never> {
-    consolo.withTag('providers/http').error('Network error')
+  protected handleNetworkError(error: unknown): FailureResult {
+    consolo.withTag("providers/http").error("Network error")
     if (error instanceof Error) {
-      if (error.name === "AbortError") return { ok: false, error: messages.error.timeout() }
+      if (error.name === "AbortError")
+        return { ok: false, error: messages.error.timeout() }
       return { ok: false, error: messages.error.network(error.message) }
     }
     return { ok: false, error: messages.error.unknown() }
