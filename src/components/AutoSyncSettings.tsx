@@ -88,9 +88,16 @@ const AutoSyncSettings = () => {
       {/* Sync phase and manual trigger */}
       {autoSync && (
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-4">
-          <span className="text-sm text-slate-600 font-mono">
-            {phase ? messages.ui.syncPhase(phase) : "--"}
-          </span>
+          <div>
+            <span className="text-sm text-slate-600 font-mono">
+              {phase ? messages.ui.syncPhase(phase) : "--"}
+            </span>
+            {phase === "uninitialized" && (
+              <div className="text-xs text-slate-500 mt-1">
+                {messages.ui.pleaseManualUploadOrDownload()}
+              </div>
+            )}
+          </div>
           <Button
             label={syncing ? messages.ui.syncing() : messages.ui.triggerSync()}
             onClick={handleTriggerSync}

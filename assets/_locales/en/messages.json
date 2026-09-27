@@ -538,5 +538,9 @@
     "sync_phase_conflict": {
         "message": "Conflict",
         "description": "Sync phase label"
+    },
+    "sync_please_manual_upload_or_download": {
+        "message": "Please manually upload or download to initialize",
+        "description": "Hint when sync phase is uninitialized"
     }
 }

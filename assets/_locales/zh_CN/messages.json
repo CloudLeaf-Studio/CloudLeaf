@@ -538,5 +538,9 @@
     "sync_phase_conflict": {
         "message": "冲突",
         "description": "同步阶段标签"
+    },
+    "sync_please_manual_upload_or_download": {
+        "message": "请手动上传或下载以初始化",
+        "description": "同步阶段未初始化时的提示"
     }
 }

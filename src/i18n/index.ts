@@ -189,6 +189,8 @@ export const messages = {
     autoSync: () => t("ui_auto_sync"),
     triggerSync: () => t("ui_trigger_sync"),
     syncing: () => t("ui_syncing"),
-    syncPhase: (phase: SyncPhase) => t(SYNC_PHASE_I18N_KEYS[phase])
+    syncPhase: (phase: SyncPhase) => t(SYNC_PHASE_I18N_KEYS[phase]),
+    pleaseManualUploadOrDownload: () =>
+      t("sync_please_manual_upload_or_download")
   }
 }

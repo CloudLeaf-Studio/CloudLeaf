@@ -138,7 +138,11 @@ async function reconcileCore(applyingCloud: ApplyingCloudRef): Promise<void> {
   if (status === "conflict") {
     consolo
       .withTag("core/sync/coordinator")
-      .info("Conflicting changes detected between local and cloud bookmarks")
+      .info(
+        "Conflicting changes detected between local and cloud bookmarks with local and cloud",
+        local,
+        cloud
+      )
 
     state.phase = "conflict"
     await setSyncState(state)
