@@ -1,3 +1,5 @@
+
+
 <div align="center">
 
 <img src="assets/icon.png" alt="CloudLeaf" width="128" height="128">
@@ -69,6 +71,8 @@ npm run package:firefox  # For Firefox
 1. Create a GitHub [Personal Access Token](https://github.com/settings/tokens) with `gist` scope
 2. Create a new Gist (can be private)
 3. Enter your token and Gist ID in the extension settings
+
+The storage filename defaults to `CloudLeaf.json`.
 
 ### WebDAV (Nutstore)
 
