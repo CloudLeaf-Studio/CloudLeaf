@@ -28,6 +28,7 @@
 - **Upload via WebDAV** - Sync bookmarks to any WebDAV-compatible cloud storage (Jianguoyun, etc.)
 - **Export to Local File** - Download bookmarks as JSON file
 - **Import from Cloud/Local** - Restore bookmarks from Gist, WebDAV, or local file
+- **Automatic Bookmark Sync** - After one successful manual upload or download, enable Auto Sync to synchronize future changes; conflicts require manual resolution ([usage guide](https://cloudleaf.yingluan.cc/guides/usage))
 - **Conflict Detection** - Prevent accidental overwrites when cloud is newer
 - **Preview Mode** - View cloud bookmarks before importing
 
