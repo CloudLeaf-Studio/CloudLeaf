@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { toast } from "sonner"
 
+import { DEFAULT_FILENAME } from "~constants"
 import { messages } from "~i18n"
 import { GistProvider, WebDAVRegistry } from "~providers"
 import { type UserConfig } from "~types"
@@ -10,7 +11,7 @@ import { type UserConfig } from "~types"
  *
  * @returns
  * - `testingMap`: record of testing states per provider id
- * - `testGist(config)`: validate Gist provider settings
+ * - `testGist(config, index)`: validate a Gist provider setting
  * - `testWebDav(config, index)`: validate a WebDAV account by index
  */
 export const useTest = () => {
@@ -32,17 +33,19 @@ export const useTest = () => {
    *
    * Shows an alert with the result and updates `testingMap` during the check.
    *
-   * @param config - User configuration containing `gist` settings
+   * @param config - User configuration containing `gistConfigs`
+   * @param index - Index of the Gist configuration to test
    */
-  const testGist = async (config: UserConfig) => {
-    if (!config?.gist) return
-    const id = "gist"
+  const testGist = async (config: UserConfig, index: number) => {
+    const gist = config?.gistConfigs?.[index]
+    if (!gist) return
+    const id = `gist-${index}`
     setItemTesting(id, true)
     try {
       const provider = new GistProvider(
-        config.gist.accessToken,
-        config.gist.gistId,
-        config.gist.fileName
+        gist.accessToken,
+        gist.gistId,
+        gist.fileName || DEFAULT_FILENAME
       )
       const res = await provider.isValid()
       if (res.ok === false) {

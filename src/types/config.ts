@@ -5,9 +5,9 @@
  */
 export interface UserConfig {
   /**
-   * GitHub Gist configuration
+   * GitHub Gist configurations
    */
-  gist?: GistConfig
+  gistConfigs?: GistConfig[]
   /**
    * WebDAV account configurations
    */
@@ -20,6 +20,15 @@ export interface UserConfig {
    * Sync configuration
    */
   sync?: SyncConfig
+}
+
+/**
+ * Configuration shape persisted by older versions.
+ *
+ * @remarks The legacy `gist` field is migrated to `gistConfigs` when read.
+ */
+export type LegacyUserConfig = UserConfig & {
+  gist?: GistConfig
 }
 
 /**

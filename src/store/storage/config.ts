@@ -1,5 +1,5 @@
-import { CONFIG_KEY, DEFAULT_USER_CONFIG } from "~constants"
-import type { UserConfig } from "~types"
+import { CONFIG_KEY } from "~constants"
+import type { LegacyUserConfig, UserConfig } from "~types"
 
 import { storage } from "./utils"
 
@@ -8,20 +8,34 @@ import { storage } from "./utils"
  *
  * @returns User config with defaults applied
  */
+export function normalizeUserConfig(
+  config?: LegacyUserConfig | null
+): UserConfig {
+  return {
+    gistConfigs: config?.gistConfigs ?? (config?.gist ? [config.gist] : []),
+    webDavConfigs: config?.webDavConfigs ?? [],
+    customVendors: config?.customVendors ?? [],
+    sync: config?.sync
+  }
+}
+
+/**
+ * Retrieve user configuration from storage and migrate legacy Gist settings.
+ *
+ * @returns User config with defaults applied and legacy fields migrated
+ */
 export async function getUserConfig(): Promise<UserConfig> {
-  const config = await storage.get<UserConfig>(CONFIG_KEY)
+  const config = await storage.get<LegacyUserConfig>(CONFIG_KEY)
 
   if (!config) {
-    return { ...DEFAULT_USER_CONFIG }
+    return normalizeUserConfig()
   }
 
-  // --- Merge with defaults ---
-  return {
-    gist: config.gist,
-    webDavConfigs: config.webDavConfigs || [],
-    customVendors: config.customVendors || [],
-    sync: config.sync
+  const normalized = normalizeUserConfig(config)
+  if ("gist" in config) {
+    await storage.set(CONFIG_KEY, normalized)
   }
+  return normalized
 }
 
 /* eslint-disable tsdoc/syntax */
@@ -43,7 +57,7 @@ export async function getUserConfig(): Promise<UserConfig> {
 export async function getMaxPriority(config?: UserConfig): Promise<number> {
   const current = config ?? (await getUserConfig())
   const priorities = [
-    current.gist?.priority,
+    ...(current.gistConfigs ?? []).map((gist) => gist.priority),
     ...current.webDavConfigs.map((acc) => acc.priority)
   ]
 

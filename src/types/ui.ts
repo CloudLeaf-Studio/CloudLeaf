@@ -24,7 +24,7 @@ export interface SourceItem {
    */
   priority: number
   /**
-   * Original index in webDavConfigs array, used for locating the config when updating
+   * Original index in the provider config array, used for locating the config when updating
    */
   rawIndex?: number
   /**
@@ -46,7 +46,7 @@ export interface Editor {
    */
   type: "gist" | "webdav"
   /**
-   * Index of the item to edit (for edit mode and webdav only)
+   * Index of the item to edit (for edit mode)
    */
   index?: number
 }

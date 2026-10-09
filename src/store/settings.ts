@@ -84,7 +84,7 @@ interface SettingsState {
    * @example
    * ```ts
    * updateConfig(draft => {
-   *   draft.gist.priority = 5
+   *   draft.gistConfigs[0].priority = 5
    *   draft.webDavConfigs[0].enabled = false
    * })
    * ```
@@ -125,7 +125,7 @@ export const useSettingsStore = create<SettingsState>()(
        * @example
        * ```ts
        * updateConfig(draft => {
-       *   draft.gist.priority = 5
+       *   draft.gistConfigs[0].priority = 5
        *   draft.webDavConfigs[0].enabled = false
        * })
        * ```
