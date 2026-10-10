@@ -10,6 +10,7 @@ export default {
   trailingComma: "none",
   bracketSpacing: true,
   bracketSameLine: true,
+  endOfLine: "auto",
   plugins: ["@ianvs/prettier-plugin-sort-imports"],
   // importOrderSeparation: true,
   // importOrderSortSpecifiers: true,
