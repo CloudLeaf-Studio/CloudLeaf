@@ -7,7 +7,7 @@
 **Browser Bookmark Cloud Sync Extension**
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/knpkebnhpcbklnknkcpgkiochlimhcoi?label=Chrome)](https://chrome.google.com/webstore/detail/knpkebnhpcbklnknkcpgkiochlimhcoi)
-[![Edge Add-ons](https://img.shields.io/badge/Edge-Supported-blue.svg)](https://microsoftedge.microsoft.com/addons/detail/knpkebnhpcbklnknkcpgkiochlimhcoi)
+[![Edge Add-ons](https://img.shields.io/badge/Edge-Supported-blue.svg)](https://microsoftedge.microsoft.com/addons/detail/aphblflmececpanomdlneaicaaklpgmm)
 [![Mozilla Add-ons](https://img.shields.io/amo/v/cloudleaf?label=Firefox)](https://addons.mozilla.org/zh-CN/firefox/addon/cloudleaf/)
 ![Chrome Web Store Size](https://img.shields.io/chrome-web-store/size/knpkebnhpcbklnknkcpgkiochlimhcoi)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -16,6 +16,8 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ccf2c7a6d3c44c16b90100c80e8f7ba7)](https://app.codacy.com/gh/CloudLeaf-Studio/CloudLeaf/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 [English](README.md) | [中文](README_zh.md)
+
+[Documentation](https://cloudleaf.yingluan.cc/) | [使用文档](https://cloudleaf.yingluan.cc/zh-cn/)
 
 </div>
 
