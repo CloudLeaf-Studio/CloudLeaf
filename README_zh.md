@@ -7,7 +7,7 @@
 **浏览器书签云同步扩展**
 
 [![Chrome 网上应用商店](https://img.shields.io/chrome-web-store/v/knpkebnhpcbklnknkcpgkiochlimhcoi?label=Chrome)](https://chrome.google.com/webstore/detail/knpkebnhpcbklnknkcpgkiochlimhcoi)
-[![Edge 附加组件](https://img.shields.io/badge/Edge-%E5%B7%B2%E6%94%AF%E6%8C%81-blue.svg)](https://microsoftedge.microsoft.com/addons/detail/knpkebnhpcbklnknkcpgkiochlimhcoi)
+[![Edge 附加组件](https://img.shields.io/badge/Edge-%E5%B7%B2%E6%94%AF%E6%8C%81-blue.svg)](https://microsoftedge.microsoft.com/addons/detail/aphblflmececpanomdlneaicaaklpgmm)
 [![Firefox 附加组件](https://img.shields.io/amo/v/cloudleaf?label=Firefox)](https://addons.mozilla.org/zh-CN/firefox/addon/cloudleaf/)
 ![Chrome Web Store Size](https://img.shields.io/chrome-web-store/size/knpkebnhpcbklnknkcpgkiochlimhcoi)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -16,6 +16,8 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ccf2c7a6d3c44c16b90100c80e8f7ba7)](https://app.codacy.com/gh/CloudLeaf-Studio/CloudLeaf/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 [English](README.md) | [中文](README_zh.md)
+
+[Documentation](https://cloudleaf.yingluan.cc/) | [使用文档](https://cloudleaf.yingluan.cc/zh-cn/)
 
 </div>
 
