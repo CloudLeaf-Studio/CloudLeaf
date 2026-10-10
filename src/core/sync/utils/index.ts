@@ -47,7 +47,7 @@ export async function buildProviders(firstOnly = false) {
   const providers: Array<{ provider: BaseProvider; priority: number }> = []
 
   // --- Gist Providers ---
-  for (const gistConfig of config.gistConfigs ?? []) {
+  for (const gistConfig of config.gistConfigs) {
     if (gistConfig.enabled === false) continue
     const fileName = gistConfig.fileName || DEFAULT_FILENAME
     const gist = new GistProvider(
@@ -62,7 +62,7 @@ export async function buildProviders(firstOnly = false) {
   }
 
   // --- WebDAV Providers ---
-  for (const w of config.webDavConfigs || []) {
+  for (const w of config.webDavConfigs) {
     if (w.enabled === false) continue
     try {
       loadCustomVendorsFromConfig(config)

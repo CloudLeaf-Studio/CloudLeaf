@@ -79,7 +79,6 @@ const WebDavSettings = ({
 
   // initial form
   useEffect(() => {
-    if (!webDavConfigs) return
     if (mode === "edit" && editingIndex != null && editingIndex >= 0) {
       const existing = webDavConfigs[editingIndex]
       if (existing) {

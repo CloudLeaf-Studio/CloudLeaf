@@ -26,7 +26,7 @@ export interface SourceItem {
   /**
    * Original index in the provider config array, used for locating the config when updating
    */
-  rawIndex?: number
+  rawIndex: number
   /**
    * Whether this sync source is enabled
    */

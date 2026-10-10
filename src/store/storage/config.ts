@@ -1,4 +1,4 @@
-import { CONFIG_KEY } from "~constants"
+import { CONFIG_KEY, DEFAULT_USER_CONFIG } from "~constants"
 import type { LegacyUserConfig, UserConfig } from "~types"
 
 import { storage } from "./utils"
@@ -6,16 +6,18 @@ import { storage } from "./utils"
 /**
  * Retrieve user configuration from storage
  *
+ * @param config - Optional legacy user config. When omitted, read from storage.
+ *
  * @returns User config with defaults applied
  */
-export function normalizeUserConfig(
-  config?: LegacyUserConfig | null
-): UserConfig {
+function normalizeUserConfig(config?: LegacyUserConfig | null): UserConfig {
   return {
-    gistConfigs: config?.gistConfigs ?? (config?.gist ? [config.gist] : []),
-    webDavConfigs: config?.webDavConfigs ?? [],
-    customVendors: config?.customVendors ?? [],
-    sync: config?.sync
+    gistConfigs:
+      config?.gistConfigs ??
+      (config?.gist ? [config.gist] : DEFAULT_USER_CONFIG.gistConfigs),
+    webDavConfigs: config?.webDavConfigs ?? DEFAULT_USER_CONFIG.webDavConfigs,
+    customVendors: config?.customVendors ?? DEFAULT_USER_CONFIG.customVendors,
+    sync: config?.sync ?? DEFAULT_USER_CONFIG.sync
   }
 }
 
@@ -57,7 +59,7 @@ export async function getUserConfig(): Promise<UserConfig> {
 export async function getMaxPriority(config?: UserConfig): Promise<number> {
   const current = config ?? (await getUserConfig())
   const priorities = [
-    ...(current.gistConfigs ?? []).map((gist) => gist.priority),
+    ...current.gistConfigs.map((gist) => gist.priority),
     ...current.webDavConfigs.map((acc) => acc.priority)
   ]
 

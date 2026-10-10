@@ -43,8 +43,8 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   const [showAddChooser, setShowAddChooser] = useState(false)
 
   // Determine if any sources are configured
-  const gistConfigs = config.gistConfigs ?? []
-  const webDavConfigs = config.webDavConfigs ?? []
+  const gistConfigs = config.gistConfigs
+  const webDavConfigs = config.webDavConfigs
 
   /**
    * All configured sources as `SourceItem` array.
@@ -77,7 +77,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   const removeGist = async (index: number) => {
     if (!(await confirm(messages.confirm.removeGist()))) return
     updateConfig((draft) => {
-      draft.gistConfigs!.splice(index, 1)
+      draft.gistConfigs.splice(index, 1)
     })
     toast(messages.alert.settingsSaved())
   }
@@ -90,7 +90,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   const removeWebDav = async (index: number) => {
     if (!(await confirm(messages.confirm.removeWebdav()))) return
     updateConfig((draft) => {
-      draft.webDavConfigs!.splice(index, 1)
+      draft.webDavConfigs.splice(index, 1)
     })
     toast(messages.alert.settingsSaved())
   }
@@ -108,15 +108,14 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
     updateConfig((draft) => {
       // source
       if (source.type === "gist")
-        draft.gistConfigs![source.rawIndex!].priority = targetPriority
-      else draft.webDavConfigs[source.rawIndex!].priority = targetPriority
+        draft.gistConfigs[source.rawIndex].priority = targetPriority
+      else draft.webDavConfigs[source.rawIndex].priority = targetPriority
 
       // targetSource
       if (targetSource.type === "gist")
-        draft.gistConfigs![targetSource.rawIndex!].priority = targetPriority + 1
+        draft.gistConfigs[targetSource.rawIndex].priority = targetPriority + 1
       else
-        draft.webDavConfigs[targetSource.rawIndex!].priority =
-          targetPriority + 1
+        draft.webDavConfigs[targetSource.rawIndex].priority = targetPriority + 1
     })
   }
 
@@ -133,15 +132,14 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
     updateConfig((draft) => {
       // source
       if (source.type === "gist")
-        draft.gistConfigs![source.rawIndex!].priority = targetPriority
-      else draft.webDavConfigs[source.rawIndex!].priority = targetPriority
+        draft.gistConfigs[source.rawIndex].priority = targetPriority
+      else draft.webDavConfigs[source.rawIndex].priority = targetPriority
 
       // targetSource
       if (targetSource.type === "gist")
-        draft.gistConfigs![targetSource.rawIndex!].priority = targetPriority - 1
+        draft.gistConfigs[targetSource.rawIndex].priority = targetPriority - 1
       else
-        draft.webDavConfigs[targetSource.rawIndex!].priority =
-          targetPriority - 1
+        draft.webDavConfigs[targetSource.rawIndex].priority = targetPriority - 1
     })
   }
 
@@ -154,8 +152,8 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   const onUpdateEnabled = (source: SourceItem, enabled: boolean) => {
     updateConfig((draft) => {
       if (source.type === "gist")
-        draft.gistConfigs![source.rawIndex!].enabled = enabled
-      else draft.webDavConfigs[source.rawIndex!].enabled = enabled
+        draft.gistConfigs[source.rawIndex].enabled = enabled
+      else draft.webDavConfigs[source.rawIndex].enabled = enabled
     })
   }
 
@@ -178,9 +176,9 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
               <SourceBoard
                 key={source.id}
                 source={source}
-                testGist={() => testGist(config, source.rawIndex!)}
+                testGist={(index) => testGist(config, index)}
                 testWebDav={(index) => testWebDav(config, index)}
-                removeGist={() => removeGist(source.rawIndex!)}
+                removeGist={removeGist}
                 removeWebDav={removeWebDav}
                 isTesting={isTesting}
                 onMoveUp={onMoveUp}

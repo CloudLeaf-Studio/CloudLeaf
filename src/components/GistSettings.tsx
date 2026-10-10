@@ -61,7 +61,7 @@ const GistSettings = ({
 
   useEffect(() => {
     if (mode === "edit" && editingIndex != null && editingIndex >= 0) {
-      const existing = gistConfigs?.[editingIndex]
+      const existing = gistConfigs[editingIndex]
       setGist(existing ? { ...existing } : null)
       return
     }
@@ -99,13 +99,12 @@ const GistSettings = ({
     if (mode === "add") {
       const priority = await getNextPriority()
       updateConfig((draft) => {
-        draft.gistConfigs ??= []
         draft.gistConfigs.push({ ...gist, priority })
       })
     } else {
       if (editingIndex == null || editingIndex < 0) return
       updateConfig((draft) => {
-        const existing = draft.gistConfigs?.[editingIndex]
+        const existing = draft.gistConfigs[editingIndex]
         if (!existing) return
         draft.gistConfigs[editingIndex] = {
           ...gist,

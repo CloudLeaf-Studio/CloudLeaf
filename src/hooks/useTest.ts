@@ -37,7 +37,7 @@ export const useTest = () => {
    * @param index - Index of the Gist configuration to test
    */
   const testGist = async (config: UserConfig, index: number) => {
-    const gist = config?.gistConfigs?.[index]
+    const gist = config.gistConfigs[index]
     if (!gist) return
     const id = `gist-${index}`
     setItemTesting(id, true)
@@ -77,7 +77,7 @@ export const useTest = () => {
    * @param index - Index of the WebDAV account to test
    */
   const testWebDav = async (config: UserConfig, index: number) => {
-    const acc = config?.webDavConfigs?.[index]
+    const acc = config.webDavConfigs[index]
     if (!acc) return
     const id = `webdav-${index}`
     setItemTesting(id, true)

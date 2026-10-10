@@ -7,19 +7,19 @@ export interface UserConfig {
   /**
    * GitHub Gist configurations
    */
-  gistConfigs?: GistConfig[]
+  gistConfigs: GistConfig[]
   /**
    * WebDAV account configurations
    */
-  webDavConfigs?: WebDAVUserConfig[]
+  webDavConfigs: WebDAVUserConfig[]
   /**
    * Custom cloud vendor metadata
    */
-  customVendors?: CustomVendorConfig[]
+  customVendors: CustomVendorConfig[]
   /**
    * Sync configuration
    */
-  sync?: SyncConfig
+  sync: SyncConfig
 }
 
 /**
@@ -28,6 +28,11 @@ export interface UserConfig {
  * @remarks The legacy `gist` field is migrated to `gistConfigs` when read.
  */
 export type LegacyUserConfig = UserConfig & {
+  /**
+   * GitHub Gist configuration
+   *
+   * @deprecated Use `gistConfigs` instead
+   */
   gist?: GistConfig
 }
 
@@ -120,5 +125,5 @@ export interface SyncConfig {
   /**
    * Whether auto-sync is enabled
    */
-  autoSyncEnabled?: boolean
+  autoSyncEnabled: boolean
 }

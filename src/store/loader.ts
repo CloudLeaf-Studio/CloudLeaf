@@ -10,7 +10,7 @@ import { type CustomVendorConfig, type UserConfig } from "~types"
  * @remarks Should be called at app startup
  */
 export function loadCustomVendorsFromConfig(config: UserConfig): void {
-  if (!config.customVendors || config.customVendors.length === 0) {
+  if (config.customVendors.length === 0) {
     return
   }
 
@@ -52,7 +52,7 @@ export function addCustomVendorToConfig(
   })
 
   // --- Update config ---
-  const customVendors = currentConfig.customVendors || []
+  const customVendors = currentConfig.customVendors
   return [...customVendors, vendor]
 }
 
@@ -74,6 +74,6 @@ export function removeCustomVendorFromConfig(
   WebDAVRegistry.removeCustomVendor(vendorId)
 
   // --- Update config ---
-  const customVendors = currentConfig.customVendors || []
+  const customVendors = currentConfig.customVendors
   return customVendors.filter((v) => v.id !== vendorId)
 }

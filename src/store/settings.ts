@@ -150,7 +150,7 @@ export const useSettingsStore = create<SettingsState>()(
        */
       updateWebDavConfigs: (updater: (draft: WebDAVUserConfig[]) => void) => {
         set((state) => {
-          updater(state.config.webDavConfigs!)
+          updater(state.config.webDavConfigs)
         })
       },
 

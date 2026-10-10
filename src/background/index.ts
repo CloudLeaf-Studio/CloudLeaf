@@ -107,7 +107,7 @@ async function init() {
   }
 
   const config = await getUserConfig()
-  if (config.sync?.autoSyncEnabled && state.phase === "ready") {
+  if (config.sync.autoSyncEnabled && state.phase === "ready") {
     schedule(5000)
     createAlarm()
   }
