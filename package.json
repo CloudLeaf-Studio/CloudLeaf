@@ -44,9 +44,9 @@
     "package:edge": "plasmo package --target=edge-mv3",
     "package:firefox": "plasmo package --target=firefox-mv2",
     "postinstall": "node scripts/patch.js",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"*.json\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"*.json\"",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx,css}\" \"*.json\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx,css}\" \"*.json\"",
     "test": "jest"
   },
   "dependencies": {
