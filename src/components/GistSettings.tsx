@@ -15,6 +15,14 @@ import Input from "./Input"
  */
 interface GistSettingsProps {
   /**
+   * Whether to add a new Gist or edit an existing one.
+   */
+  mode?: "add" | "edit"
+  /**
+   * Index of the Gist configuration being edited.
+   */
+  editingIndex?: number | null
+  /**
    * Close the Gist settings panel
    */
   onClose: () => void
@@ -29,10 +37,15 @@ interface GistSettingsProps {
  *
  * @returns A JSX element rendering Gist settings inputs and save button
  */
-const GistSettings = ({ onClose }: GistSettingsProps) => {
+const GistSettings = ({
+  mode = "add",
+  editingIndex = null,
+  onClose
+}: GistSettingsProps) => {
   // Get config and actions from store
-  const gistConfig = useSettingsStore((state) => state.config?.gist)
+  const gistConfigs = useSettingsStore((state) => state.config.gistConfigs)
   const updateConfig = useSettingsStore((state) => state.updateConfig)
+  const getNextPriority = useSettingsStore((state) => state.getNextPriority)
 
   // Local form state
   const [gist, setGist] = useState<GistConfig | null>(null)
@@ -47,8 +60,13 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
   }
 
   useEffect(() => {
-    setGist(gistConfig || null)
-  }, [])
+    if (mode === "edit" && editingIndex != null && editingIndex >= 0) {
+      const existing = gistConfigs[editingIndex]
+      setGist(existing ? { ...existing } : null)
+      return
+    }
+    setGist({ ...DEFAULT_GIST })
+  }, [editingIndex, gistConfigs, mode])
 
   /**
    * Handle changes to a specific Gist configuration field.
@@ -78,9 +96,22 @@ const GistSettings = ({ onClose }: GistSettingsProps) => {
    */
   const handleSave = async () => {
     if (!gist) return
-    updateConfig((draft) => {
-      draft.gist = gist
-    })
+    if (mode === "add") {
+      const priority = await getNextPriority()
+      updateConfig((draft) => {
+        draft.gistConfigs.push({ ...gist, priority })
+      })
+    } else {
+      if (editingIndex == null || editingIndex < 0) return
+      updateConfig((draft) => {
+        const existing = draft.gistConfigs[editingIndex]
+        if (!existing) return
+        draft.gistConfigs[editingIndex] = {
+          ...gist,
+          priority: existing.priority
+        }
+      })
+    }
     toast(messages.alert.settingsSaved())
     onClose()
   }

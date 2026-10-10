@@ -1,27 +1,43 @@
 import { CONFIG_KEY, DEFAULT_USER_CONFIG } from "~constants"
-import type { UserConfig } from "~types"
+import type { LegacyUserConfig, UserConfig } from "~types"
 
 import { storage } from "./utils"
 
 /**
  * Retrieve user configuration from storage
  *
+ * @param config - Optional legacy user config. When omitted, read from storage.
+ *
  * @returns User config with defaults applied
  */
+function normalizeUserConfig(config?: LegacyUserConfig | null): UserConfig {
+  return {
+    gistConfigs:
+      config?.gistConfigs ??
+      (config?.gist ? [config.gist] : DEFAULT_USER_CONFIG.gistConfigs),
+    webDavConfigs: config?.webDavConfigs ?? DEFAULT_USER_CONFIG.webDavConfigs,
+    customVendors: config?.customVendors ?? DEFAULT_USER_CONFIG.customVendors,
+    sync: config?.sync ?? DEFAULT_USER_CONFIG.sync
+  }
+}
+
+/**
+ * Retrieve user configuration from storage and migrate legacy Gist settings.
+ *
+ * @returns User config with defaults applied and legacy fields migrated
+ */
 export async function getUserConfig(): Promise<UserConfig> {
-  const config = await storage.get<UserConfig>(CONFIG_KEY)
+  const config = await storage.get<LegacyUserConfig>(CONFIG_KEY)
 
   if (!config) {
-    return { ...DEFAULT_USER_CONFIG }
+    return normalizeUserConfig()
   }
 
-  // --- Merge with defaults ---
-  return {
-    gist: config.gist,
-    webDavConfigs: config.webDavConfigs || [],
-    customVendors: config.customVendors || [],
-    sync: config.sync
+  const normalized = normalizeUserConfig(config)
+  if ("gist" in config) {
+    await storage.set(CONFIG_KEY, normalized)
   }
+  return normalized
 }
 
 /* eslint-disable tsdoc/syntax */
@@ -43,7 +59,7 @@ export async function getUserConfig(): Promise<UserConfig> {
 export async function getMaxPriority(config?: UserConfig): Promise<number> {
   const current = config ?? (await getUserConfig())
   const priorities = [
-    current.gist?.priority,
+    ...current.gistConfigs.map((gist) => gist.priority),
     ...current.webDavConfigs.map((acc) => acc.priority)
   ]
 

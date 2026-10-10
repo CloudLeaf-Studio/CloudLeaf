@@ -21,7 +21,7 @@ async function reconcileCore(applyingCloud: ApplyingCloudRef): Promise<void> {
     .info("Running auto-sync reconciliation cycle")
 
   const config = await getUserConfig()
-  if (!config.sync?.autoSyncEnabled) {
+  if (!config.sync.autoSyncEnabled) {
     consolo.withTag("core/sync/coordinator").info("Auto-sync is disabled")
     return
   }

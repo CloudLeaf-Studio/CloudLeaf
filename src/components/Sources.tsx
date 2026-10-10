@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { toast } from "sonner"
 
+import { DEFAULT_FILENAME } from "~constants"
 import { useTest } from "~hooks"
 import { messages } from "~i18n"
 import { useSettingsStore } from "~store"
@@ -42,42 +43,41 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   const [showAddChooser, setShowAddChooser] = useState(false)
 
   // Determine if any sources are configured
-  const hasGist = !!config?.gist?.accessToken
-  const webDavCount = config?.webDavConfigs?.length || 0
-  const hasSources = hasGist || webDavCount > 0
+  const gistConfigs = config.gistConfigs
+  const webDavConfigs = config.webDavConfigs
 
   /**
    * All configured sources as `SourceItem` array.
    */
   const allSources: SourceItem[] = [
-    ...(hasGist
-      ? [
-          {
-            type: "gist" as const,
-            id: "gist",
-            label: config!.gist!.fileName,
-            priority: config!.gist!.priority,
-            enabled: config!.gist!.enabled
-          }
-        ]
-      : []),
-    ...(config?.webDavConfigs?.map((acc, idx) => ({
+    ...gistConfigs.map((gist, idx) => ({
+      type: "gist" as const,
+      id: `gist-${idx}`,
+      label: `${gist.gistId} / ${gist.fileName || DEFAULT_FILENAME}`,
+      priority: gist.priority,
+      rawIndex: idx,
+      enabled: gist.enabled !== false
+    })),
+    ...webDavConfigs.map((acc, idx) => ({
       type: "webdav" as const,
       id: `webdav-${idx}`,
       label: `${acc.vendorId} / ${acc.username} ${acc.filePath}`,
       priority: acc.priority,
       rawIndex: idx,
-      enabled: acc.enabled
-    })) || [])
+      enabled: acc.enabled !== false
+    }))
   ]
+
+  const orderedSources = [...allSources].sort((a, b) => a.priority - b.priority)
+  const hasSources = orderedSources.length > 0
 
   /**
    * Remove Gist configuration after user confirmation.
    */
-  const removeGist = async () => {
+  const removeGist = async (index: number) => {
     if (!(await confirm(messages.confirm.removeGist()))) return
     updateConfig((draft) => {
-      draft.gist = undefined
+      draft.gistConfigs.splice(index, 1)
     })
     toast(messages.alert.settingsSaved())
   }
@@ -90,7 +90,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
   const removeWebDav = async (index: number) => {
     if (!(await confirm(messages.confirm.removeWebdav()))) return
     updateConfig((draft) => {
-      draft.webDavConfigs!.splice(index, 1)
+      draft.webDavConfigs.splice(index, 1)
     })
     toast(messages.alert.settingsSaved())
   }
@@ -101,21 +101,21 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
    * @param index - Index of the source to move up
    */
   const onMoveUp = (index: number) => {
-    const source = allSources[index]
-    const targetSource = allSources[index - 1]
+    const source = orderedSources[index]
+    const targetSource = orderedSources[index - 1]
     const targetPriority = targetSource.priority
 
     updateConfig((draft) => {
       // source
-      if (source.type === "gist") draft.gist!.priority = targetPriority
-      else draft.webDavConfigs[source.rawIndex!].priority = targetPriority
+      if (source.type === "gist")
+        draft.gistConfigs[source.rawIndex].priority = targetPriority
+      else draft.webDavConfigs[source.rawIndex].priority = targetPriority
 
       // targetSource
       if (targetSource.type === "gist")
-        draft.gist!.priority = targetPriority + 1
+        draft.gistConfigs[targetSource.rawIndex].priority = targetPriority + 1
       else
-        draft.webDavConfigs[targetSource.rawIndex!].priority =
-          targetPriority + 1
+        draft.webDavConfigs[targetSource.rawIndex].priority = targetPriority + 1
     })
   }
 
@@ -125,21 +125,21 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
    * @param index - Index of the source to move down
    */
   const onMoveDown = (index: number) => {
-    const source = allSources[index]
-    const targetSource = allSources[index + 1]
+    const source = orderedSources[index]
+    const targetSource = orderedSources[index + 1]
     const targetPriority = targetSource.priority
 
     updateConfig((draft) => {
       // source
-      if (source.type === "gist") draft.gist!.priority = targetPriority
-      else draft.webDavConfigs[source.rawIndex!].priority = targetPriority
+      if (source.type === "gist")
+        draft.gistConfigs[source.rawIndex].priority = targetPriority
+      else draft.webDavConfigs[source.rawIndex].priority = targetPriority
 
       // targetSource
       if (targetSource.type === "gist")
-        draft.gist!.priority = targetPriority - 1
+        draft.gistConfigs[targetSource.rawIndex].priority = targetPriority - 1
       else
-        draft.webDavConfigs[targetSource.rawIndex!].priority =
-          targetPriority - 1
+        draft.webDavConfigs[targetSource.rawIndex].priority = targetPriority - 1
     })
   }
 
@@ -151,8 +151,9 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
    */
   const onUpdateEnabled = (source: SourceItem, enabled: boolean) => {
     updateConfig((draft) => {
-      if (source.type === "gist") draft.gist!.enabled = enabled
-      else draft.webDavConfigs[source.rawIndex!].enabled = enabled
+      if (source.type === "gist")
+        draft.gistConfigs[source.rawIndex].enabled = enabled
+      else draft.webDavConfigs[source.rawIndex].enabled = enabled
     })
   }
 
@@ -169,36 +170,34 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
       ) : (
         /* Not empty state */
         <div className="grid grid-cols-1 gap-2">
-          {allSources
-            .sort((a, b) => a.priority - b.priority)
-            .map((source, i) => {
-              const isTesting = testingMap[source.id]
-              return (
-                <SourceBoard
-                  key={source.id}
-                  source={source}
-                  testGist={() => testGist(config)}
-                  testWebDav={(index) => testWebDav(config, index)}
-                  removeGist={removeGist}
-                  removeWebDav={removeWebDav}
-                  isTesting={isTesting}
-                  onMoveUp={onMoveUp}
-                  onMoveDown={onMoveDown}
-                  index={i}
-                  total={allSources.length}
-                  onUpdateEnabled={(enabled) => {
-                    onUpdateEnabled(source, enabled)
-                  }}
-                  onEdit={() =>
-                    onOpenEditor({
-                      mode: "edit",
-                      type: source.type,
-                      index: source.rawIndex
-                    })
-                  }
-                />
-              )
-            })}
+          {orderedSources.map((source, i) => {
+            const isTesting = testingMap[source.id]
+            return (
+              <SourceBoard
+                key={source.id}
+                source={source}
+                testGist={(index) => testGist(config, index)}
+                testWebDav={(index) => testWebDav(config, index)}
+                removeGist={removeGist}
+                removeWebDav={removeWebDav}
+                isTesting={isTesting}
+                onMoveUp={onMoveUp}
+                onMoveDown={onMoveDown}
+                index={i}
+                total={orderedSources.length}
+                onUpdateEnabled={(enabled) => {
+                  onUpdateEnabled(source, enabled)
+                }}
+                onEdit={() =>
+                  onOpenEditor({
+                    mode: "edit",
+                    type: source.type,
+                    index: source.rawIndex
+                  })
+                }
+              />
+            )
+          })}
         </div>
       )}
 
@@ -216,8 +215,7 @@ const Sources = ({ onOpenEditor }: SourcesProps) => {
           {showAddChooser && (
             <div className="flex items-center gap-2">
               <button
-                className={`px-2 py-1 text-[12px] rounded-md border font-mono ${hasGist ? "opacity-40 cursor-not-allowed" : "hover:bg-slate-900 hover:text-white border-slate-200"}`}
-                disabled={hasGist}
+                className="px-2 py-1 text-[12px] rounded-md border font-mono hover:bg-slate-900 hover:text-white border-slate-200"
                 onClick={() => {
                   onOpenEditor({ mode: "add", type: "gist" })
                   setShowAddChooser(false)

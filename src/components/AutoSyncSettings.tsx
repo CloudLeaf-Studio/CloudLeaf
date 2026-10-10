@@ -18,7 +18,7 @@ import Switch from "./Switch"
  */
 const AutoSyncSettings = () => {
   const autoSync = useSettingsStore(
-    (state) => state.config.sync?.autoSyncEnabled ?? false
+    (state) => state.config.sync.autoSyncEnabled ?? false
   )
   const updateConfig = useSettingsStore((state) => state.updateConfig)
   /**

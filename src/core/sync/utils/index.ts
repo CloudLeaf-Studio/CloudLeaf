@@ -46,22 +46,23 @@ export async function buildProviders(firstOnly = false) {
   const config = await getUserConfig()
   const providers: Array<{ provider: BaseProvider; priority: number }> = []
 
-  // --- Gist Provider ---
-  if (config.gist && config.gist.enabled) {
-    const fileName = config.gist.fileName || DEFAULT_FILENAME
+  // --- Gist Providers ---
+  for (const gistConfig of config.gistConfigs) {
+    if (gistConfig.enabled === false) continue
+    const fileName = gistConfig.fileName || DEFAULT_FILENAME
     const gist = new GistProvider(
-      config.gist.accessToken,
-      config.gist.gistId,
+      gistConfig.accessToken,
+      gistConfig.gistId,
       fileName
     )
     providers.push({
       provider: gist,
-      priority: config.gist.priority ?? Number.MAX_SAFE_INTEGER
+      priority: gistConfig.priority ?? Number.MAX_SAFE_INTEGER
     })
   }
 
   // --- WebDAV Providers ---
-  for (const w of config.webDavConfigs || []) {
+  for (const w of config.webDavConfigs) {
     if (w.enabled === false) continue
     try {
       loadCustomVendorsFromConfig(config)

@@ -18,7 +18,7 @@ interface SourceBoardProps {
   /**
    * Test Gist connectivity
    */
-  testGist: () => Promise<void>
+  testGist: (index: number) => Promise<void>
   /**
    * Test WebDAV connectivity by account index
    */
@@ -26,7 +26,7 @@ interface SourceBoardProps {
   /**
    * Remove gist configuration
    */
-  removeGist: () => void
+  removeGist: (index: number) => void
   /**
    * Remove webdav configuration by account index
    */
@@ -225,7 +225,9 @@ const SourceBoard = ({
               {/* Button to test connection */}
               <button
                 onClick={() =>
-                  isGist ? testGist() : testWebDav(source.rawIndex!)
+                  isGist
+                    ? testGist(source.rawIndex)
+                    : testWebDav(source.rawIndex)
                 }
                 disabled={isTesting}
                 className={`flex-1 py-2 rounded-md text-[11px] transition-all cursor-pointer font-bold ${
@@ -248,7 +250,9 @@ const SourceBoard = ({
               {/* Button to remove source */}
               <button
                 onClick={() =>
-                  isGist ? removeGist() : removeWebDav(source.rawIndex!)
+                  isGist
+                    ? removeGist(source.rawIndex)
+                    : removeWebDav(source.rawIndex)
                 }
                 className={`
                     px-4 py-2 rounded-md text-[11px] transition-all cursor-pointer font-bold

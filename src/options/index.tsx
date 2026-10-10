@@ -75,6 +75,8 @@ function OptionsPage() {
           {/* Inline editor panel: Gist or WebDAV */}
           {editor?.type === "gist" && (
             <GistSettings
+              mode={editor.mode}
+              editingIndex={editor.index ?? null}
               onClose={() => {
                 setEditor(null)
               }}

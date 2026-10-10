@@ -30,7 +30,7 @@ export const DEFAULT_SYNC_STATE: SyncState = {
  * @readonly
  */
 export const DEFAULT_USER_CONFIG: UserConfig = {
-  gist: undefined,
+  gistConfigs: [],
   webDavConfigs: [],
   customVendors: [],
   sync: {
