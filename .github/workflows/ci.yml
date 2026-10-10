@@ -6,7 +6,9 @@ on:
       - master
       - test/jest-and-ci
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - test/jest-and-ci
   workflow_dispatch:
 
 concurrency:
