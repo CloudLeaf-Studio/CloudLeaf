@@ -389,6 +389,14 @@
         "message": "导入书签",
         "description": "导入按钮"
     },
+    "ui_local_bookmark_count": {
+        "message": "本地书签数量",
+        "description": "本地书签数量提示"
+    },
+    "ui_cloud_bookmark_count": {
+        "message": "云端书签数量",
+        "description": "云端书签数量提示"
+    },
     "ui_enabled_sources": {
         "message": "已启用的同步源",
         "description": "同步源标题"

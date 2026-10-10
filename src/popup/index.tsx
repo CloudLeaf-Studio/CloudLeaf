@@ -393,7 +393,13 @@ function IndexPopup() {
       <div className="flex items-center justify-between text-xs text-slate-400 pl-1 pt-1">
         {/* Bookmark counts */}
         <span>
-          {localCount ?? "--"} / {cloudCount ?? "--"}
+          <span title={messages.ui.localBookmarkCount()}>
+            {localCount ?? "--"}
+          </span>
+          <span className="mx-1">/</span>
+          <span title={messages.ui.cloudBookmarkCount()}>
+            {cloudCount ?? "--"}
+          </span>
         </span>
 
         {/* GitHub link */}

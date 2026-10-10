@@ -389,6 +389,14 @@
         "message": "Import Bookmarks",
         "description": "Import button label"
     },
+    "ui_local_bookmark_count": {
+        "message": "Local bookmark count",
+        "description": "Local bookmark count tooltip"
+    },
+    "ui_cloud_bookmark_count": {
+        "message": "Cloud bookmark count",
+        "description": "Cloud bookmark count tooltip"
+    },
     "ui_enabled_sources": {
         "message": "Enabled Sync Sources",
         "description": "Sources section title"

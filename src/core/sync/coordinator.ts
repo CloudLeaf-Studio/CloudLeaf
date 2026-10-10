@@ -2,7 +2,7 @@ import { E_ALREADY_LOCKED, tryAcquire, type Mutex } from "async-mutex"
 
 import { HttpStatus, WebDAVStatus } from "~constants"
 import { getBookmarks, setBookmarks } from "~core/bookmark"
-import { getSyncState, getUserConfig, setSyncState } from "~store"
+import { getSyncState, getUserConfig, setCount, setSyncState } from "~store"
 import { actionApi, consolo } from "~utils"
 
 import { withCloudApply, type ApplyingCloudRef } from "./apply"
@@ -69,6 +69,7 @@ async function reconcileCore(applyingCloud: ApplyingCloudRef): Promise<void> {
   if (!cloudRes.data) return
 
   const cloud = cloudRes.data
+  await setCount("cloud", cloud.numBookmarks)
   const status = await getSyncStatus(local, cloud)
 
   consolo
