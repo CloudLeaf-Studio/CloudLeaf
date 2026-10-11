@@ -2,13 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
-      - test/jest-and-ci
+    branches: [master]
   pull_request:
-    branches:
-      - master
-      - test/jest-and-ci
+    branches: [master]
   workflow_dispatch:
 
 concurrency:
