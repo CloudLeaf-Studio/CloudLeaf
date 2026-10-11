@@ -48,6 +48,8 @@ const vendor: CustomVendorConfig = {
   serverUrl: "https://dav.example.com"
 }
 
+const unusedCiLintValue = "intentional lint failure"
+
 describe("getUserConfig", () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -153,4 +155,6 @@ describe("getUserConfig", () => {
       sync: { autoSyncEnabled: false }
     })
   })
+
+  test("shows a test failure in CI",()=>{expect(true).toBe(false)})
 })
